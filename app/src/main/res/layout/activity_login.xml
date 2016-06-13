@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".View.LoginActivity"
+    android:background="#2c8162"
+    android:padding="0dp">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/imageView"
+            android:background="@drawable/magasalakunalogo"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="30dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1.5">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:weightSum="1">
+
+            <com.facebook.login.widget.LoginButton
+
+                android:id="@+id/fb_login_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:paddingRight="50dp"
+                android:paddingEnd="20dp"
+                android:paddingLeft="50dp" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Login with email"
+                android:id="@+id/emailloginbtn"
+                android:background="#860d0d"
+                android:gravity="center_vertical|center|center_horizontal"
+                android:paddingTop="17dp"
+                android:paddingBottom="17dp"
+                android:paddingRight="79dp"
+                android:paddingLeft="79dp"
+                android:textColor="#ffffff"
+                android:textSize="14dp"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:gravity="bottom|center_vertical|center_horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Already have an account?"
+            android:id="@+id/signinbtn"
+            android:textSize="14dp"
+            android:paddingLeft="79dp"
+            android:paddingRight="79dp"
+            android:paddingTop="17dp"
+            android:paddingBottom="17dp"
+            android:textColor="#ffffff"
+            android:nestedScrollingEnabled="false"
+            android:layout_gravity="center" />
+    </LinearLayout>
+
+</LinearLayout>
