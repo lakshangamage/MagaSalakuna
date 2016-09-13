@@ -107,10 +107,11 @@ public class MainActivity extends AppCompatActivity {
         viewPagerAdaptor = new ViewPagerAdaptor(getSupportFragmentManager());
 
         viewPagerAdaptor.addFragments(new HomeFragment(),"Home");
-        viewPagerAdaptor.addFragments(new FriendsFragment(),"Friends");
         viewPagerAdaptor.addFragments(new CheckInFragment(),"Check Ins");
+        viewPagerAdaptor.addFragments(new FriendsFragment(),"Friends");
         viewPagerAdaptor.addFragments(new EventsFragment(),"Events");
         viewPager.setAdapter(viewPagerAdaptor );
+        viewPager.setOffscreenPageLimit(4);
         tabLayout.setupWithViewPager(viewPager);
 
         /*progressDialog = new ProgressDialog(this);
@@ -137,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
         navigationView = (NavigationView) findViewById(R.id.navogation_view);
         headerView = navigationView.inflateHeaderView(R.layout.drawerheader);
         imageView = (ImageView) headerView.findViewById(R.id.headerimage);
-
+        /*
         Bundle params = new Bundle();
         params.putString("fields", "id,first_name, last_name, email,gender,cover,picture.type(large)");
         if(intent.getStringExtra("loginmethod").equals("email")){
@@ -176,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     }).executeAsync();
-        }
+        }*/
 
 
     }

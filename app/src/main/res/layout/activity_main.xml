@@ -6,28 +6,33 @@
     tools:context=".View.MainActivity"
     android:background="@color/colorPrimaryDark"
     android:id="@+id/drawer_layout">
-    <android.support.design.widget.AppBarLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
-        <include
-            android:id="@+id/toolbar"
+        <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            layout="@layout/toolbar"></include>
-        <android.support.design.widget.TabLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/tablayout"
-            app:tabMode="fixed"
-            app:tabGravity="fill"></android.support.design.widget.TabLayout>
+            android:id="@+id/appbarlayout"
+            android:orientation="vertical">
+            <include
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="220px"
+                layout="@layout/toolbar"></include>
+            <android.support.design.widget.TabLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tablayout"
+                app:tabMode="fixed"
+                ></android.support.design.widget.TabLayout>
+        </android.support.design.widget.AppBarLayout>
 
         <android.support.v4.view.ViewPager
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/viewpager"></android.support.v4.view.ViewPager>
-    </android.support.design.widget.AppBarLayout>
-
+    </LinearLayout>
     <android.support.design.widget.NavigationView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
