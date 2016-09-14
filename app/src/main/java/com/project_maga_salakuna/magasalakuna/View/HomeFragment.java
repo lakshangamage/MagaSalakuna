@@ -91,7 +91,7 @@ public class HomeFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        /*mMapController = mMapView.getController();
+        mMapController = mMapView.getController();
         mMapController.setZoom(18);
         if (!mapUpdated) {
 
@@ -101,7 +101,7 @@ public class HomeFragment extends Fragment {
         }else{
             locationSet=false;
             updateMap();
-        }*/
+        }
         return view;
     }
     @TargetApi(Build.VERSION_CODES.M)

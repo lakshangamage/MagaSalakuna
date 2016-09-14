@@ -151,7 +151,7 @@ public class FriendsFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            adapter = new RecyclerAdaptor(searchList);
+
             layoutManager = new LinearLayoutManager(getContext());
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
@@ -221,9 +221,9 @@ public class FriendsFragment extends Fragment {
             if (file_url != null){
                 Toast.makeText(activity, file_url, Toast.LENGTH_LONG).show();
             }
-
+            adapter = new RecyclerAdaptor(searchList);
             recyclerView.setAdapter(adapter);
-
+            //adapter.notifyDataSetChanged();
         }
     }
 

@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
         navigationView = (NavigationView) findViewById(R.id.navogation_view);
         headerView = navigationView.inflateHeaderView(R.layout.drawerheader);
         imageView = (ImageView) headerView.findViewById(R.id.headerimage);
-        /*
+
         Bundle params = new Bundle();
         params.putString("fields", "id,first_name, last_name, email,gender,cover,picture.type(large)");
         if(intent.getStringExtra("loginmethod").equals("email")){
@@ -177,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     }).executeAsync();
-        }*/
+        }
 
 
     }

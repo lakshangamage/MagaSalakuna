@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.project_maga_salakuna.magasalakuna.View.FriendsFragment"
-    android:background="#e2e2e2">
+    android:background="@color/colorPrimaryDark">
 
     <!-- TODO: Update blank fragment layout -->
     <FrameLayout
@@ -30,7 +30,8 @@
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar_container"
         android:id="@+id/friendsrecyclervirew"
-        android:scrollbars="vertical">
+        android:scrollbars="vertical"
+        android:background="@color/colorPrimaryDark">
 
     </android.support.v7.widget.RecyclerView>
 
