@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -21,10 +23,13 @@ import android.widget.Toast;
 
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.project_maga_salakuna.magasalakuna.Controller.JSONParser;
+import com.project_maga_salakuna.magasalakuna.Controller.RecyclerAdaptor;
+import com.project_maga_salakuna.magasalakuna.Model.User;
 import com.project_maga_salakuna.magasalakuna.R;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,6 +37,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FriendsFragment extends Fragment {
+    public ArrayList<User> friendList=null;
+    public ArrayList<User> searchList=null;
     View view = null;
     Activity activity;
     MaterialSearchView searchView;
@@ -39,7 +46,9 @@ public class FriendsFragment extends Fragment {
     Boolean isMenuInflated = false;
     private ProgressDialog pDialog;
     String searchString="";
-
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
     JSONParser jsonParser = new JSONParser();
 
     private static final String SEARCH_URL = "http://176.32.230.51/pathmila.com/maga_salakuna/searchfriends.php";
@@ -64,6 +73,9 @@ public class FriendsFragment extends Fragment {
         String []suggestions = {"Amal","Kamal", "Nimal", "Pasindu", "Lakshan"};
         view = inflater.inflate(R.layout.fragment_friends, container, false);
         activity = getActivity();
+        friendList = new ArrayList<>();
+        searchList = new ArrayList<>();
+        recyclerView = (RecyclerView) view.findViewById(R.id.friendsrecyclervirew);
         searchBar = (Toolbar) view.findViewById(R.id.searchtoolbar);
         searchView = (MaterialSearchView) view.findViewById(R.id.search_view);
         searchView.setVoiceSearch(true);
@@ -139,6 +151,10 @@ public class FriendsFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            adapter = new RecyclerAdaptor(searchList);
+            layoutManager = new LinearLayoutManager(getContext());
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setHasFixedSize(true);
             pDialog = new ProgressDialog(activity);
             pDialog.setMessage("Searching...");
             pDialog.setIndeterminate(false);
@@ -169,13 +185,21 @@ public class FriendsFragment extends Fragment {
 
 
                 if (success == 1) {
-                    JSONObject user = json.getJSONObject("user");
-                    String firstname = user.getString("firstname");
-                    String lastname = user.getString("lastname");
-                    String email = user.getString("email");
-                    String phone = user.getString("phone");
-                    String picture = user.getString("picture");
-                    
+                    JSONArray users = json.getJSONArray("users");
+                    User user = null;
+                    searchList = new ArrayList<>();
+                    for (int i = 0; i< users.length();i++){
+                        String id = ((JSONObject)(users.get(i))).getString("id");
+                        String firstname = ((JSONObject)(users.get(i))).getString("first_name");
+                        String lastname = ((JSONObject)(users.get(i))).getString("last_name");
+                        String email = ((JSONObject)(users.get(i))).getString("email");
+                        String phone = ((JSONObject)(users.get(i))).getString("phone");
+                        String picture = ((JSONObject)(users.get(i))).getString("picture");
+                        user = new User(id, firstname,lastname,email,phone,picture);
+                        searchList.add(user);
+                    }
+
+
                     return json.getString(TAG_MESSAGE);
                 }else{
                     Log.d("Login Failure!", json.getString(TAG_MESSAGE));
@@ -197,6 +221,8 @@ public class FriendsFragment extends Fragment {
             if (file_url != null){
                 Toast.makeText(activity, file_url, Toast.LENGTH_LONG).show();
             }
+
+            recyclerView.setAdapter(adapter);
 
         }
     }
