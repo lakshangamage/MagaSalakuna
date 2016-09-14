@@ -4,6 +4,7 @@ package com.project_maga_salakuna.magasalakuna.Model;
  * Created by Lakshan on 2016-06-12.
  */
 public class User {
+    private String id;
     private String firstName;
     private String lastName;
     private String email;
@@ -19,6 +20,23 @@ public class User {
         this.lastName = lastName;
         this.email = email;
         this.phone = phone;
+    }
+
+    public User(String id, String firstName, String lastName, String email, String phone, String picture) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phone = phone;
+        this.picture = picture;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getFirstName() {
