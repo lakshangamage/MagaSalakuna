@@ -70,7 +70,7 @@ public class FriendsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        String []suggestions = {"Amal","Kamal", "Nimal", "Pasindu", "Lakshan"};
+        String []suggestions = {"Amal","Kamal", "Nimal", "Pasindu", "Lakshan", "pasindu"};
         view = inflater.inflate(R.layout.fragment_friends, container, false);
         activity = getActivity();
         friendList = new ArrayList<>();

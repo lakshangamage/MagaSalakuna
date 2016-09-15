@@ -47,8 +47,8 @@ public class HomeFragment extends Fragment {
     private IMapController mMapController;
     private double xCoordinates;
     private double yCoordinates;
-    private double currentxCoordinates;
-    private double currentyCoordinates;
+    public static double currentxCoordinates;
+    public static double currentyCoordinates;
     private String name;
     //MyItemizedOverlay myItemizedOverlay = null;
     private LocationManager locationManager;

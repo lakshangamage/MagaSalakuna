@@ -69,7 +69,9 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     NavigationView navigationView;
     ViewPagerAdaptor viewPagerAdaptor;
-
+    public static String firstname;
+    public static String lastname;
+    public static String photo;
     private MapView mMapView;
     private IMapController mMapController;
     private double xCoordinates;
@@ -98,12 +100,18 @@ public class MainActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Home");
         setSupportActionBar(toolbar);
+        intent = this.getIntent();
+
+        firstname = intent.getStringExtra("firstname");
+        lastname = intent.getStringExtra("lastname");
+        photo = intent.getStringExtra("picture");
+
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         tabLayout = (TabLayout) findViewById(R.id.tablayout);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.drawer_open,R.string.drawer_close);
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
-        intent = this.getIntent();
+
         viewPagerAdaptor = new ViewPagerAdaptor(getSupportFragmentManager());
 
         viewPagerAdaptor.addFragments(new HomeFragment(),"Home");
