@@ -54,7 +54,8 @@ public class AddCheckInActivity extends AppCompatActivity {
 
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_MESSAGE = "message";
-
+    public double xCordinates;
+    public double yCordinates;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,6 +133,8 @@ public class AddCheckInActivity extends AppCompatActivity {
         String status;
         String at;
         String id;
+        public double xCordinates;
+        public double yCordinates;
 
         @Override
         protected void onPreExecute() {
@@ -145,6 +148,14 @@ public class AddCheckInActivity extends AppCompatActivity {
             status = statusTxt.getText().toString();
             at = attext.getText().toString();
             id = MainActivity.id;
+
+
+            for(POI poi:pois){
+                if(poi.mDescription.equalsIgnoreCase(at)){
+                    xCordinates = poi.mLocation.getLongitude();
+                    yCordinates = poi.mLocation.getLatitude();
+                }
+            }
         }
 
         @Override
@@ -160,8 +171,8 @@ public class AddCheckInActivity extends AppCompatActivity {
                 params.add(new BasicNameValuePair("id", id));
                 params.add(new BasicNameValuePair("status", status));
                 params.add(new BasicNameValuePair("at", at));
-                params.add(new BasicNameValuePair("xCordinates", String.valueOf(HomeFragment.currentxCoordinates)));
-                params.add(new BasicNameValuePair("yCordinates", String.valueOf(HomeFragment.currentyCoordinates)));
+                params.add(new BasicNameValuePair("xCordinates", String.valueOf(xCordinates)));
+                params.add(new BasicNameValuePair("yCordinates", String.valueOf(yCordinates)));
 
                 Log.d("request!", "starting");
                 // getting product details by making HTTP request
