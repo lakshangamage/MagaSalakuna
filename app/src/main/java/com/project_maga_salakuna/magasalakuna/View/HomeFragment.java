@@ -196,7 +196,7 @@ public class HomeFragment extends Fragment {
 
             for(CheckIn checkIn : checkIns){
                 Marker poiMarker = new Marker(mMapView);
-                poiMarker.setTitle(checkIn.getUser().getFirstName());
+                poiMarker.setTitle(checkIn.getUser().getFirstName()+ " "+ checkIn.getUser().getLastName());
                 poiMarker.setSnippet(checkIn.getStatus()+ " @ " +checkIn.getAt());
                 poiMarker.setPosition(new GeoPoint(checkIn.getLattitude(),checkIn.getLongitude()));
                 poiMarkers.add(poiMarker);
