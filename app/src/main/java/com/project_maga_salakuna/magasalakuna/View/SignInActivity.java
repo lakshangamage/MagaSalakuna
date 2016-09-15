@@ -96,6 +96,7 @@ public class SignInActivity extends Activity {
                 // json success tag
                 success = json.getInt(TAG_SUCCESS);
                 JSONObject user = json.getJSONObject("user");
+                String id = user.getString("id");
                 String firstname = user.getString("firstname");
                 String lastname = user.getString("lastname");
                 String email = user.getString("email");
@@ -105,6 +106,7 @@ public class SignInActivity extends Activity {
                 if (success == 1) {
                     Log.d("Login Successful!", json.toString());
                     Intent i = new Intent(SignInActivity.this, MainActivity.class);
+                    i.putExtra("id",id);
                     i.putExtra("loginmethod","email");
                     i.putExtra("firstname", firstname);
                     i.putExtra("lastname", lastname);

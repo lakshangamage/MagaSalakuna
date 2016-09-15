@@ -69,9 +69,11 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     NavigationView navigationView;
     ViewPagerAdaptor viewPagerAdaptor;
+    public static String id;
     public static String firstname;
     public static String lastname;
     public static String photo;
+
     private MapView mMapView;
     private IMapController mMapController;
     private double xCoordinates;
@@ -101,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle("Home");
         setSupportActionBar(toolbar);
         intent = this.getIntent();
-
+        id = intent.getStringExtra("id");
         firstname = intent.getStringExtra("firstname");
         lastname = intent.getStringExtra("lastname");
         photo = intent.getStringExtra("picture");
