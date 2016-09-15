@@ -203,6 +203,7 @@ public class HomeFragment extends Fragment {
             }
             Marker endMarker = new Marker(mMapView);
             endMarker.setPosition(userLocation);
+            endMarker.setTitle("You Are Here");
             endMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
             poiMarkers.add(endMarker);
             mMapView.getOverlays().add(poiMarkers);
