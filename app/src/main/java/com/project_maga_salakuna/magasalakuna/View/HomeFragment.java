@@ -15,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -25,12 +26,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.project_maga_salakuna.magasalakuna.Controller.JSONParser;
 import com.project_maga_salakuna.magasalakuna.Controller.RecyclerAdaptor;
 import com.project_maga_salakuna.magasalakuna.Model.CheckIn;
+import com.project_maga_salakuna.magasalakuna.Model.CircleView;
 import com.project_maga_salakuna.magasalakuna.Model.User;
 import com.project_maga_salakuna.magasalakuna.R;
 
@@ -62,24 +65,16 @@ public class HomeFragment extends Fragment {
     private boolean mapUpdated = false;
     private MapView mMapView;
     private IMapController mMapController;
-    private double xCoordinates;
-    private double yCoordinates;
     public static double currentxCoordinates;
     public static double currentyCoordinates;
-    private String name;
-    //MyItemizedOverlay myItemizedOverlay = null;
     private LocationManager locationManager;
     private LocationListener locationListener;
     private ProgressDialog progressDialog;
     private boolean locationSet = false;
-    private PathOverlay myPath;
-    private GeoPoint shopLocation;
     private GeoPoint userLocation;
-    RoadManager roadManager;
-    Road road;
-    private TextView distanceTxt;
-    private TextView duratioTxt;
     private Activity activity;
+    private CircleView circleView;
+    private SeekBar seekBar;
     FloatingActionButton fab;
     public ArrayList<CheckIn> checkIns;
     JSONParser jsonParser = new JSONParser();
@@ -88,6 +83,7 @@ public class HomeFragment extends Fragment {
 
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_MESSAGE = "message";
+
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -100,7 +96,7 @@ public class HomeFragment extends Fragment {
         activity = getActivity();
         progressDialog = new ProgressDialog(activity);
         progressDialog.setCancelable(false);
-        checkIns = null;
+        checkIns = new ArrayList<>();
         mMapView = (MapView) view.findViewById(R.id.mapview);
         mMapView.setTileSource(TileSourceFactory.MAPNIK);
         mMapView.setBuiltInZoomControls(true);
@@ -118,17 +114,41 @@ public class HomeFragment extends Fragment {
         mMapController = mMapView.getController();
         mMapController.setZoom(18);
         new GetCheckins().execute();
+        circleView = (CircleView) view.findViewById(R.id.circle_drawer_view);
+        seekBar = (SeekBar) view.findViewById(R.id.seekbar);
+
+        seekBar.setMax( circleView.getBounds() );
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                circleView.resizeCircle(i);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
         return view;
     }
+
     @TargetApi(Build.VERSION_CODES.M)
-    public void getLocation(){
+    public void getLocation() {
         locationManager = (LocationManager) activity.getSystemService(activity.LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
                 currentxCoordinates = location.getLatitude();
                 currentyCoordinates = location.getLongitude();
-                hideDialog();
+                //hideDialog();
+//                Toast toast = Toast.makeText(getContext(), "Location Changed", Toast.LENGTH_SHORT);
+//                toast.show();
                 updateMap(checkIns);
             }
 
@@ -148,45 +168,39 @@ public class HomeFragment extends Fragment {
                 startActivity(intent);
             }
         };
-        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                        PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{
-                    Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION
             }, 10);
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, locationListener);
-        progressDialog.setMessage("Waiting for Location...");
-        showDialog();
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if(!locationSet){
-                    if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
-                        return;
-                    }
-                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListener);
-                }
-            }
-        },10000);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10000, 0, locationListener);
+//        progressDialog.setMessage("Waiting for Location...");
+//        showDialog();
+//        Timer timer = new Timer();
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                if(!locationSet){
+//                    if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) !=
+//                            PackageManager.PERMISSION_GRANTED &&
+//                            ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) !=
+//                                    PackageManager.PERMISSION_GRANTED) {
+//                        return;
+//                    }
+//                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListener);
+//                }
+//            }
+//        },10000);
 
     }
+
     private void updateMap(ArrayList<CheckIn> checkIns) {
-        if(!locationSet){
+        if (!locationSet) {
             userLocation = new GeoPoint(currentxCoordinates, currentyCoordinates);
             /*myItemizedOverlay.addItem(userLocation, "You", "You");
             myPath.addPoint(userLocation);
@@ -194,11 +208,11 @@ public class HomeFragment extends Fragment {
             //mMapView.getOverlays().add(myPath);
             FolderOverlay poiMarkers = new FolderOverlay(activity);
 
-            for(CheckIn checkIn : checkIns){
+            for (CheckIn checkIn : checkIns) {
                 Marker poiMarker = new Marker(mMapView);
-                poiMarker.setTitle(checkIn.getUser().getFirstName()+ " "+ checkIn.getUser().getLastName());
-                poiMarker.setSnippet(checkIn.getStatus()+ " @ " +checkIn.getAt());
-                poiMarker.setPosition(new GeoPoint(checkIn.getLattitude(),checkIn.getLongitude()));
+                poiMarker.setTitle(checkIn.getUser().getFirstName() + " " + checkIn.getUser().getLastName());
+                poiMarker.setSnippet(checkIn.getStatus() + " @ " + checkIn.getAt());
+                poiMarker.setPosition(new GeoPoint(checkIn.getLattitude(), checkIn.getLongitude()));
                 poiMarkers.add(poiMarker);
             }
             Marker endMarker = new Marker(mMapView);
@@ -263,29 +277,29 @@ public class HomeFragment extends Fragment {
                     User user = null;
                     CheckIn checkIn = null;
                     checkIns = new ArrayList<>();
-                    for (int i = 0; i< checkins.length();i++){
-                        String uid = ((JSONObject)(checkins.get(i))).getString("uid");
-                        String checkinid = ((JSONObject)(checkins.get(i))).getString("id");
-                        String status = ((JSONObject)(checkins.get(i))).getString("status");
-                        String at = ((JSONObject)(checkins.get(i))).getString("at");
-                        double longitude = ((JSONObject)(checkins.get(i))).getDouble("longitude");
-                        double lattitude = ((JSONObject)(checkins.get(i))).getDouble("lattitude");
-                        String timestamp = ((JSONObject)(checkins.get(i))).getString("timestamp");
+                    for (int i = 0; i < checkins.length(); i++) {
+                        String uid = ((JSONObject) (checkins.get(i))).getString("uid");
+                        String checkinid = ((JSONObject) (checkins.get(i))).getString("id");
+                        String status = ((JSONObject) (checkins.get(i))).getString("status");
+                        String at = ((JSONObject) (checkins.get(i))).getString("at");
+                        double longitude = ((JSONObject) (checkins.get(i))).getDouble("longitude");
+                        double lattitude = ((JSONObject) (checkins.get(i))).getDouble("lattitude");
+                        String timestamp = ((JSONObject) (checkins.get(i))).getString("timestamp");
 
-                        String id = ((JSONObject)(users.get(i))).getString("id");
-                        String firstname = ((JSONObject)(users.get(i))).getString("first_name");
-                        String lastname = ((JSONObject)(users.get(i))).getString("last_name");
-                        String email = ((JSONObject)(users.get(i))).getString("email");
-                        String phone = ((JSONObject)(users.get(i))).getString("phone");
-                        String picture = ((JSONObject)(users.get(i))).getString("picture");
-                        user = new User(id, firstname,lastname,email,phone,picture);
-                        checkIn = new CheckIn(checkinid,uid,status,timestamp,at,longitude,lattitude,user);
+                        String id = ((JSONObject) (users.get(i))).getString("id");
+                        String firstname = ((JSONObject) (users.get(i))).getString("first_name");
+                        String lastname = ((JSONObject) (users.get(i))).getString("last_name");
+                        String email = ((JSONObject) (users.get(i))).getString("email");
+                        String phone = ((JSONObject) (users.get(i))).getString("phone");
+                        String picture = ((JSONObject) (users.get(i))).getString("picture");
+                        user = new User(id, firstname, lastname, email, phone, picture);
+                        checkIn = new CheckIn(checkinid, uid, status, timestamp, at, longitude, lattitude, user);
                         checkIns.add(checkIn);
                     }
 
-                    System.out.println("Ckeck ins size: ==========================="+ checkins.length());
+                    System.out.println("Ckeck ins size: ===========================" + checkins.length());
                     return json.getString(TAG_MESSAGE);
-                }else{
+                } else {
                     Log.d("Login Failure!", json.getString(TAG_MESSAGE));
                     //Toast.makeText(Login.this, "Invalid login details", Toast.LENGTH_LONG).show();
                     return json.getString(TAG_MESSAGE);
@@ -302,18 +316,31 @@ public class HomeFragment extends Fragment {
         protected void onPostExecute(String file_url) {
             // dismiss the dialog once product deleted
             pDialog.dismiss();
-            if (file_url != null){
+            if (file_url != null) {
                 Toast.makeText(activity, file_url, Toast.LENGTH_LONG).show();
             }
             if (!mapUpdated) {
 
                 getLocation();
-                mapUpdated=true;
+                mapUpdated = true;
                 // Inflate the layout for this fragment
-            }else{
-                locationSet=false;
+            } else {
+                locationSet = false;
                 updateMap(checkIns);
             }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == 10) {
+            if (ActivityCompat.checkSelfPermission(getContext(),
+                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(getContext(),
+                            Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, locationListener);
         }
     }
 }

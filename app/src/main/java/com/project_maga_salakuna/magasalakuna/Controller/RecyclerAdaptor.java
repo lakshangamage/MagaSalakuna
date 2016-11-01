@@ -19,7 +19,7 @@ import java.util.ArrayList;
 /**
  * Created by lakshan on 9/14/16.
  */
-public class RecyclerAdaptor extends RecyclerView.Adapter<RecyclerAdaptor.RecyclerViewHolder> {
+public class RecyclerAdaptor extends RecyclerView.Adapter<RecyclerAdaptor.RecyclerViewHolder> implements View.OnClickListener{
     ArrayList<User> friendList = null;
 
     public RecyclerAdaptor(ArrayList<User> friendList) {
@@ -53,6 +53,11 @@ public class RecyclerAdaptor extends RecyclerView.Adapter<RecyclerAdaptor.Recycl
         return friendList.size();
     }
 
+    @Override
+    public void onClick(View view) {
+
+    }
+
     public static class RecyclerViewHolder extends RecyclerView.ViewHolder{
         ImageView photoview = null;
         TextView nameTxt = null;
@@ -67,7 +72,12 @@ public class RecyclerAdaptor extends RecyclerView.Adapter<RecyclerAdaptor.Recycl
             emailTxt = (TextView) itemView.findViewById(R.id.emailTxtView);
             phoneTxt = (TextView) itemView.findViewById(R.id.phoneTxt);
             addBtn = (ImageButton) itemView.findViewById(R.id.addfriendbtn);
+            addBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
+                }
+            });
 
         }
     }

@@ -8,6 +8,16 @@
     <org.osmdroid.views.MapView android:id="@+id/mapview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
+    <com.project_maga_salakuna.magasalakuna.Model.CircleView
+        android:id="@+id/circle_drawer_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <android.support.v7.widget.AppCompatSeekBar
+        android:id="@+id/seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="30dp"/>
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
