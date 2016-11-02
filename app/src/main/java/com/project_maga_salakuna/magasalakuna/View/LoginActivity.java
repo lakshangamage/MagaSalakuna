@@ -2,6 +2,7 @@ package com.project_maga_salakuna.magasalakuna.View;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -98,6 +99,27 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        SharedPreferences prefs = getSharedPreferences(
+                "com.project_maga_salakuna.magasalakuna", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        if(prefs.getBoolean("isLoggedIn", false)){
+            String id = prefs.getString("id","Null");
+            String firstname = prefs.getString("firstname","Null");
+            String lastname = prefs.getString("lastname","Null");
+            String email = prefs.getString("email","Null");
+            String phone = prefs.getString("phone","Null");
+            String picture = prefs.getString("picture","Null");
+            Intent i = new Intent(LoginActivity.this, MainActivity.class);
+            i.putExtra("id",id);
+            i.putExtra("loginmethod","email");
+            i.putExtra("firstname", firstname);
+            i.putExtra("lastname", lastname);
+            i.putExtra("email", email);
+            i.putExtra("phone", phone);
+            i.putExtra("picture", picture);
+            finish();
+            startActivity(i);
+        }
     }
 
     @Override

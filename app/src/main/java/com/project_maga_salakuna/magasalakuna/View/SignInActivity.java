@@ -2,7 +2,9 @@ package com.project_maga_salakuna.magasalakuna.View;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -113,6 +115,18 @@ public class SignInActivity extends Activity {
                     i.putExtra("email", email);
                     i.putExtra("phone", phone);
                     i.putExtra("picture", picture);
+                    SharedPreferences prefs = getSharedPreferences(
+                            "com.project_maga_salakuna.magasalakuna", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putBoolean("isLoggedIn", true);
+                    editor.putString("id",id);
+                    editor.putString("loginmethod","email");
+                    editor.putString("firstname", firstname);
+                    editor.putString("lastname", lastname);
+                    editor.putString("email", email);
+                    editor.putString("phone", phone);
+                    editor.putString("picture", picture);
+                    editor.commit();
                     finish();
                     startActivity(i);
                     return json.getString(TAG_MESSAGE);

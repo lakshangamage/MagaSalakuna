@@ -3,7 +3,6 @@ package com.project_maga_salakuna.magasalakuna.Model;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.support.design.widget.CoordinatorLayout;
@@ -11,7 +10,6 @@ import android.util.AttributeSet;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 
 /**
