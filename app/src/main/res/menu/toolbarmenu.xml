@@ -4,7 +4,14 @@
     <item
         android:id="@+id/action_search"
         android:icon="@drawable/ic_action_action_search"
-        android:orderInCategory="100"
+
         android:title="@string/abc_search_hint"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom|collapseActionView"
+        app:actionViewClass="android.support.v7.widget.SearchView"/>
+    <item
+        android:id="@+id/action_friends_near"
+        android:icon="@drawable/direction_arrow"
+        android:title="nearby"
+        app:showAsAction="ifRoom"
+        />
 </menu>
