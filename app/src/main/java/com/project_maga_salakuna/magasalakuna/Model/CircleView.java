@@ -6,10 +6,12 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 
 /**
@@ -37,14 +39,24 @@ public class CircleView extends View{
         maxX = mdispSize.x;
         maxY = mdispSize.y;
 
-        left = 0;
-        top = (maxY-maxX)/2;
-        right = maxX;
-        bottom = maxY;
-        makeCircleBounds();
-        mCircleDrawable.setBounds(left,top,right,bottom);
+
+        //makeCircleBounds();
+
     }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec){
+        maxX = MeasureSpec.getSize(widthMeasureSpec);
+        maxY = MeasureSpec.getSize(heightMeasureSpec);
+        this.setMeasuredDimension(maxX, maxY);
+        this.setLayoutParams(new CoordinatorLayout.LayoutParams(maxX,maxY));
+        left = 0;
+        top = (maxY - maxX)/2;
+        right = maxX;
+        bottom = top + maxX;
+        mCircleDrawable.setBounds(left, top, right, bottom);
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
     public CircleView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
@@ -118,9 +130,9 @@ public class CircleView extends View{
     public void resizeCircle(int maxX){
         left = (this.maxX - maxX)/2;
         top = (maxY - maxX)/2;
-        right = (this.maxX - maxX)/2 + maxX;
-        bottom = (maxY - maxX)/2 + maxX;
-        makeCircleBounds();
+        right = left + maxX;
+        bottom = top + maxX;
+        //makeCircleBounds();
         mCircleDrawable.setBounds(left, top, right, bottom);
         invalidate();
     }
@@ -134,8 +146,8 @@ public class CircleView extends View{
 
         if (height > width) {
             int delta = height - width;
-            top += delta / 2;
-            bottom -= delta / 2;
+            //top += delta / 2;
+            bottom -= delta;
         } else {
             int delta = width - height;
             left += delta / 2;
