@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     tools:context=".View.MainActivity"
     android:background="@color/colorPrimaryDark"
-    android:id="@+id/drawer_layout">
+    android:id="@+id/drawer_layout"
+    android:fitsSystemWindows="true">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,11 +16,15 @@
             android:layout_height="wrap_content"
             android:id="@+id/appbarlayout"
             android:orientation="vertical">
-            <include
+            <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="220px"
-                layout="@layout/toolbar"></include>
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/colorPrimary"
+                android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                android:elevation="4dp"/>
             <android.support.design.widget.TabLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

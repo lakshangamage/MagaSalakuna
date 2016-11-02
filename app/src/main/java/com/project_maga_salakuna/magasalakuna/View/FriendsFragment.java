@@ -77,37 +77,37 @@ public class FriendsFragment extends Fragment {
         searchList = new ArrayList<>();
         recyclerView = (RecyclerView) view.findViewById(R.id.friendsrecyclervirew);
         searchBar = (Toolbar) view.findViewById(R.id.searchtoolbar);
-        searchView = (MaterialSearchView) view.findViewById(R.id.search_view);
-        searchView.setVoiceSearch(true);
-        searchView.setVoiceIcon(getResources().getDrawable(R.drawable.ic_action_voice_search));
-        searchView.showVoice(true);
-        searchView.setSuggestions(suggestions);
-        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                searchString = query;
-                new SearchFriends().execute();
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                Toast.makeText(getContext(), "query text CHANGED", Toast.LENGTH_SHORT);
-                return false;
-            }
-        });
-        // Inflate the layout for this fragment
-        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
-            @Override
-            public void onSearchViewShown() {
-                Toast.makeText(getContext(), "SearchView Opened", Toast.LENGTH_SHORT);
-            }
-
-            @Override
-            public void onSearchViewClosed() {
-                Toast.makeText(getContext(), "SearchView Closed", Toast.LENGTH_SHORT);
-            }
-        });
+//        searchView = (MaterialSearchView) view.findViewById(R.id.search_view);
+//        searchView.setVoiceSearch(true);
+//        searchView.setVoiceIcon(getResources().getDrawable(R.drawable.ic_action_voice_search));
+//        searchView.showVoice(true);
+//        searchView.setSuggestions(suggestions);
+//        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                searchString = query;
+//                new SearchFriends().execute();
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                Toast.makeText(getContext(), "query text CHANGED", Toast.LENGTH_SHORT);
+//                return false;
+//            }
+//        });
+//        // Inflate the layout for this fragment
+//        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+//            @Override
+//            public void onSearchViewShown() {
+//                Toast.makeText(getContext(), "SearchView Opened", Toast.LENGTH_SHORT);
+//            }
+//
+//            @Override
+//            public void onSearchViewClosed() {
+//                Toast.makeText(getContext(), "SearchView Closed", Toast.LENGTH_SHORT);
+//            }
+//        });
         return view;
 
 
@@ -129,18 +129,7 @@ public class FriendsFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (!isMenuInflated){
-            searchBar.inflateMenu(R.menu.searchmenu);
-            //inflater.inflate(R.menu.searchmenu,searchBar.getMenu());
-            //inflater.inflate(R.menu.searchmenu, menu);
-            MenuItem item = searchBar.getMenu().findItem(R.id.action_search);
-            searchView.setMenuItem(item);
-            isMenuInflated = true;
-        }
 
-    }
 
 
 

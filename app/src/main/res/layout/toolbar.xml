@@ -2,7 +2,8 @@
 <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="100px"
-    android:background="@color/com_facebook_messenger_blue"
-    android:fitsSystemWindows="true"
-    android:elevation="4dp"></android.support.v7.widget.Toolbar>
+    android:layout_height="?attr/actionBarSize"
+    android:background="@color/com_facebook_button_background_color_focused"
+    android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+    android:elevation="4dp"/>
