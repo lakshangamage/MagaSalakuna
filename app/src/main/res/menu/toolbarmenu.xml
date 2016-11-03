@@ -10,8 +10,8 @@
         app:actionViewClass="android.support.v7.widget.SearchView"/>
     <item
         android:id="@+id/action_friends_near"
-        android:icon="@drawable/direction_arrow"
+        android:icon="@drawable/ic_near_me_white_18dp"
         android:title="nearby"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         />
 </menu>

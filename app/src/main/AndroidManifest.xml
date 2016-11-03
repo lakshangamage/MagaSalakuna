@@ -17,6 +17,8 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+        <meta-data android:name="android.app.default_searchable"
+            android:value=".View.SearchResultsActivity" />
 
         <activity
             android:name=".View.SplashActivity"
@@ -34,10 +36,7 @@
         <activity
             android:name=".View.LoginActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity android:name=".View.MainActivity">
-            <meta-data android:name="android.app.default_searchable"
-                android:value=".View.SearchResultsActivity" />
-        </activity>
+        <activity android:name=".View.MainActivity"/>
         <activity android:name=".View.SignUpActivity" />
         <activity android:name=".View.SignInActivity" />
         <!--

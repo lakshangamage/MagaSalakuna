@@ -113,7 +113,7 @@ public class HomeFragment extends Fragment {
             }
         });
         refreshfab = (FloatingActionButton) view.findViewById(R.id.refreshfab);
-        refreshfab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.checkinbtnicon));
+        refreshfab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.refreshbtn));
         refreshfab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

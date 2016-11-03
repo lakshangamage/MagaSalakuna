@@ -140,7 +140,6 @@ public class FriendsFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
             layoutManager = new LinearLayoutManager(getContext());
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);

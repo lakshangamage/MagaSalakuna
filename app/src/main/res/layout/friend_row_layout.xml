@@ -56,6 +56,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:src="@drawable/addfriendbtn"
-        android:background="@drawable/addfriendbtn" />
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"/>
 
 </RelativeLayout>
