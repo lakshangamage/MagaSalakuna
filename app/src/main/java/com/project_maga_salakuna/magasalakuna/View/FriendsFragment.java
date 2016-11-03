@@ -14,16 +14,13 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.project_maga_salakuna.magasalakuna.Controller.JSONParser;
-import com.project_maga_salakuna.magasalakuna.Controller.RecyclerAdaptor;
+import com.project_maga_salakuna.magasalakuna.Controller.FriendsLargeRecyclerAdaptor;
 import com.project_maga_salakuna.magasalakuna.Model.User;
 import com.project_maga_salakuna.magasalakuna.R;
 
@@ -209,7 +206,7 @@ public class FriendsFragment extends Fragment {
             if (file_url != null){
                 Toast.makeText(activity, file_url, Toast.LENGTH_LONG).show();
             }
-            adapter = new RecyclerAdaptor(searchList);
+            adapter = new FriendsLargeRecyclerAdaptor(searchList);
             recyclerView.setAdapter(adapter);
             //adapter.notifyDataSetChanged();
         }

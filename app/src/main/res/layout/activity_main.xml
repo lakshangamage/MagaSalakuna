@@ -51,7 +51,7 @@
             android:layout_height="match_parent"
             android:id="@+id/friendsrecyclervirew"
             android:scrollbars="vertical"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/cardview_dark_background"
             android:layout_gravity ="end"/>
 
 </android.support.v4.widget.DrawerLayout>

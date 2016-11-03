@@ -19,7 +19,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.project_maga_salakuna.magasalakuna.Controller.JSONParser;
-import com.project_maga_salakuna.magasalakuna.Controller.RecyclerAdaptor;
+import com.project_maga_salakuna.magasalakuna.Controller.FriendsLargeRecyclerAdaptor;
 import com.project_maga_salakuna.magasalakuna.Model.User;
 import com.project_maga_salakuna.magasalakuna.R;
 
@@ -138,7 +138,7 @@ public class SearchResultsActivity extends AppCompatActivity {
             if (file_url != null){
                 Toast.makeText(context, file_url, Toast.LENGTH_LONG).show();
             }
-            adapter = new RecyclerAdaptor(searchList);
+            adapter = new FriendsLargeRecyclerAdaptor(searchList);
             recyclerView.setAdapter(adapter);
             //adapter.notifyDataSetChanged();
         }

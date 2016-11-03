@@ -34,16 +34,15 @@ import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
-import com.miguelcatalan.materialsearchview.MaterialSearchView;
+import com.project_maga_salakuna.magasalakuna.Controller.FriendsSmallRecyclerAdaptor;
 import com.project_maga_salakuna.magasalakuna.Controller.JSONParser;
-import com.project_maga_salakuna.magasalakuna.Controller.RecyclerAdaptor;
+import com.project_maga_salakuna.magasalakuna.Controller.FriendsLargeRecyclerAdaptor;
 import com.project_maga_salakuna.magasalakuna.Controller.ViewPagerAdaptor;
 import com.project_maga_salakuna.magasalakuna.Model.CheckIn;
 import com.project_maga_salakuna.magasalakuna.Model.User;
 import com.project_maga_salakuna.magasalakuna.R;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -355,7 +354,7 @@ public class MainActivity extends AppCompatActivity {
             if (file_url != null){
                 Toast.makeText(context, file_url, Toast.LENGTH_LONG).show();
             }
-            adapter = new RecyclerAdaptor(searchList);
+            adapter = new FriendsSmallRecyclerAdaptor(searchList);
             recyclerView.setAdapter(adapter);
             //adapter.notifyDataSetChanged();
         }

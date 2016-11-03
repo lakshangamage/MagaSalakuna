@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -19,14 +18,10 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.project_maga_salakuna.magasalakuna.Controller.JSONParser;
-import com.project_maga_salakuna.magasalakuna.Controller.RecyclerAdaptor;
-import com.project_maga_salakuna.magasalakuna.Model.User;
 import com.project_maga_salakuna.magasalakuna.R;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.impl.entity.StrictContentLengthStrategy;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.bonuspack.location.NominatimPOIProvider;
@@ -35,7 +30,6 @@ import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 public class AddCheckInActivity extends AppCompatActivity {
     Button checkinbtn = null;
