@@ -206,7 +206,7 @@ public class FriendsFragment extends Fragment {
             if (file_url != null){
                 Toast.makeText(activity, file_url, Toast.LENGTH_LONG).show();
             }
-            adapter = new FriendsLargeRecyclerAdaptor(searchList);
+            //adapter = new FriendsLargeRecyclerAdaptor(searchList,getActivity());
             recyclerView.setAdapter(adapter);
             //adapter.notifyDataSetChanged();
         }

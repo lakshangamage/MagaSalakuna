@@ -36,10 +36,6 @@ public class CircleView extends View{
         mdisp.getSize(mdispSize);
         maxX = mdispSize.x;
         maxY = mdispSize.y;
-
-
-        //makeCircleBounds();
-
     }
 
     @Override
@@ -90,35 +86,35 @@ public class CircleView extends View{
 //
 //        return true;
 //    }
-
-    private void prepareCircleDrawing(MotionEvent event) {
-
-        int index = event.getActionIndex();
-
-        if (index > 1) {
-            return;
-        }
-        mTouchMode = MODE_PINCH;
-        if (event.getX(0) < event.getX(1)) {
-            left = (int) event.getX(0);
-            right = (int) event.getX(1);
-        } else {
-            left = (int) event.getX(1);
-            right = (int) event.getX(0);
-        }
-
-        if (event.getY(0) < event.getY(1)) {
-            top = (int) event.getY(0);
-            bottom = (int) event.getY(1);
-        } else {
-            top = (int) event.getY(1);
-            bottom = (int) event.getY(0);
-        }
-        makeCircleBounds();
-        mCircleDrawable.setBounds(left, top, right, bottom);
-
-        invalidate();
-    }
+//
+//    private void prepareCircleDrawing(MotionEvent event) {
+//
+//        int index = event.getActionIndex();
+//
+//        if (index > 1) {
+//            return;
+//        }
+//        mTouchMode = MODE_PINCH;
+//        if (event.getX(0) < event.getX(1)) {
+//            left = (int) event.getX(0);
+//            right = (int) event.getX(1);
+//        } else {
+//            left = (int) event.getX(1);
+//            right = (int) event.getX(0);
+//        }
+//
+//        if (event.getY(0) < event.getY(1)) {
+//            top = (int) event.getY(0);
+//            bottom = (int) event.getY(1);
+//        } else {
+//            top = (int) event.getY(1);
+//            bottom = (int) event.getY(0);
+//        }
+//        makeCircleBounds();
+//        mCircleDrawable.setBounds(left, top, right, bottom);
+//
+//        invalidate();
+//    }
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -151,6 +147,15 @@ public class CircleView extends View{
             left += delta / 2;
             right -= delta / 2;
         }
+    }
+    public int getMiddleY(){
+        return (top+bottom)/2;
+    }
+    public int getMiddleX(){
+        return (left+right)/2;
+    }
+    public int getRightVal(){
+        return right;
     }
 
 }

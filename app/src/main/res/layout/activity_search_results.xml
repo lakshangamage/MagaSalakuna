@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     tools:context="com.project_maga_salakuna.magasalakuna.View.SearchResultsActivity">
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -26,5 +27,5 @@
         android:layout_below="@id/appbarlayout"
         android:id="@+id/friendsrecyclervirew"
         android:scrollbars="vertical"
-        android:background="@color/colorPrimaryDark" />
+        android:background="@android:color/white" />
 </RelativeLayout>

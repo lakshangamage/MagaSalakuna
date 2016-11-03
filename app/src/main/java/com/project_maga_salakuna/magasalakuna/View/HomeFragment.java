@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -40,6 +41,7 @@ import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.Projection;
 import org.osmdroid.views.overlay.FolderOverlay;
 import org.osmdroid.views.overlay.Marker;
 
@@ -70,15 +72,13 @@ public class HomeFragment extends Fragment {
     JSONParser jsonParser = new JSONParser();
     private ProgressDialog pDialog;
     private static final String SEARCH_URL = "http://176.32.230.51/pathmila.com/maga_salakuna/getcheckins.php";
-
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_MESSAGE = "message";
+    FolderOverlay poiMarkers;
 
     public HomeFragment() {
         // Required empty public constructor
     }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -109,6 +109,7 @@ public class HomeFragment extends Fragment {
                 // Click action
                 MainActivity mainActivity = (MainActivity) getActivity();
                 mainActivity.refresh();
+                refreshMapRange();
             }
         });
         mMapController = mMapView.getController();
@@ -137,7 +138,6 @@ public class HomeFragment extends Fragment {
         });
         return view;
     }
-
     @TargetApi(Build.VERSION_CODES.M)
     public void getLocation() {
         locationManager = (LocationManager) activity.getSystemService(activity.LOCATION_SERVICE);
@@ -198,7 +198,6 @@ public class HomeFragment extends Fragment {
 //        },10000);
 
     }
-
     private void updateMap(ArrayList<CheckIn> checkIns) {
         if (!locationSet) {
             userLocation = new GeoPoint(currentxCoordinates, currentyCoordinates);
@@ -206,7 +205,7 @@ public class HomeFragment extends Fragment {
             myPath.addPoint(userLocation);
             myPath.addPoint(userLocation);*/
             //mMapView.getOverlays().add(myPath);
-            FolderOverlay poiMarkers = new FolderOverlay(activity);
+            poiMarkers = new FolderOverlay(activity);
 
             for (CheckIn checkIn : checkIns) {
                 Marker poiMarker = new Marker(mMapView);
@@ -224,19 +223,15 @@ public class HomeFragment extends Fragment {
             mMapController.setCenter(userLocation);
         }
         locationSet = true;
-
     }
-
     private void showDialog() {
         if (!progressDialog.isShowing())
             progressDialog.show();
     }
-
     private void hideDialog() {
         if (progressDialog.isShowing())
             progressDialog.dismiss();
     }
-
     class GetCheckins extends AsyncTask<String, String, String> {
 
         boolean failure = false;
@@ -328,7 +323,6 @@ public class HomeFragment extends Fragment {
             }
         }
     }
-
     class RefreshMap extends AsyncTask<String, String, String> {
 
         boolean failure = false;
@@ -433,5 +427,56 @@ public class HomeFragment extends Fragment {
             }
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, locationListener);
         }
+    }
+    public void refreshMapRange(){
+        GeoPoint circleCentrePoint = geoPointFromScreenCoords(circleView.getMiddleX(),circleView.getMiddleY(),mMapView);
+        GeoPoint farestPoint = geoPointFromScreenCoords(circleView.getRightVal(),circleView.getMiddleY(),mMapView);
+        double maxDistance = distFrom(circleCentrePoint.getLatitude(),circleCentrePoint.getLongitude(),farestPoint.getLatitude(),farestPoint.getLongitude());
+        userLocation = new GeoPoint(currentxCoordinates, currentyCoordinates);
+        mMapView.getOverlays().remove(poiMarkers);
+        poiMarkers = new FolderOverlay(activity);
+        for(CheckIn checkIn: checkIns){
+            if (distFrom(circleCentrePoint.getLatitude(),circleCentrePoint.getLongitude(),checkIn.getLattitude(),checkIn.getLongitude()) <= maxDistance){
+                Marker poiMarker = new Marker(mMapView);
+                poiMarker.setTitle(checkIn.getUser().getFirstName() + " " + checkIn.getUser().getLastName());
+                poiMarker.setSnippet(checkIn.getStatus() + " @ " + checkIn.getAt());
+                poiMarker.setPosition(new GeoPoint(checkIn.getLattitude(), checkIn.getLongitude()));
+                poiMarkers.add(poiMarker);
+            }
+        }
+
+        Marker endMarker = new Marker(mMapView);
+        endMarker.setPosition(userLocation);
+        endMarker.setTitle("You Are Here");
+        endMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        poiMarkers.add(endMarker);
+        mMapView.getOverlays().add(poiMarkers);
+        //mMapView.invalidate();
+    }
+    private GeoPoint geoPointFromScreenCoords(int x, int y, MapView vw){
+        if (x < 0 || y < 0 || x > vw.getWidth() || y > vw.getHeight()){
+            return null; // coord out of bounds
+        }
+        // Get the top left GeoPoint
+        Projection projection = vw.getProjection();
+        GeoPoint geoPointTopLeft = (GeoPoint) projection.fromPixels(0, 0);
+        Point topLeftPoint = new Point();
+        // Get the top left Point (includes osmdroid offsets)
+        projection.toPixels(geoPointTopLeft, topLeftPoint);
+        // get the GeoPoint of any point on screen
+        GeoPoint rtnGeoPoint = (GeoPoint) projection.fromPixels(x, y);
+        return rtnGeoPoint;
+    }
+    public double distFrom(double lat1, double lng1, double lat2, double lng2) {
+        double earthRadius = 6371000; //meters
+        double dLat = Math.toRadians(lat2-lat1);
+        double dLng = Math.toRadians(lng2-lng1);
+        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLng/2) * Math.sin(dLng/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        double dist = (float) (earthRadius * c);
+
+        return dist;
     }
 }

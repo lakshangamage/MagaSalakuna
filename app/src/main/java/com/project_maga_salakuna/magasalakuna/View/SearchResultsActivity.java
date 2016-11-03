@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.project_maga_salakuna.magasalakuna.Controller.JSONParser;
 import com.project_maga_salakuna.magasalakuna.Controller.FriendsLargeRecyclerAdaptor;
+import com.project_maga_salakuna.magasalakuna.Model.Friends;
 import com.project_maga_salakuna.magasalakuna.Model.User;
 import com.project_maga_salakuna.magasalakuna.R;
 
@@ -40,7 +41,7 @@ public class SearchResultsActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
-    public ArrayList<User> friendList=null;
+    public ArrayList<Friends> friendList=null;
     public ArrayList<User> searchList=null;
     Context context = this;
     JSONParser jsonParser = new JSONParser();
@@ -102,6 +103,7 @@ public class SearchResultsActivity extends AppCompatActivity {
             try {
                 List<NameValuePair> params = new ArrayList<NameValuePair>();
                 params.add(new BasicNameValuePair("name", searchString));
+                params.add(new BasicNameValuePair("id", MainActivity.id));
                 Log.d("request!", "starting");
                 JSONObject json = jsonParser.makeHttpRequest(SEARCH_URL, "POST", params);
                 Log.d("Login attempt", json.toString());
@@ -119,6 +121,16 @@ public class SearchResultsActivity extends AppCompatActivity {
                         String picture = ((JSONObject)(users.get(i))).getString("picture");
                         user = new User(id, firstname,lastname,email,phone,picture);
                         searchList.add(user);
+                    }
+                    JSONArray friends = json.getJSONArray("friends");
+                    Friends friend = null;
+                    friendList = new ArrayList<>();
+                    for (int i = 0; i< users.length();i++){
+                        String friend1 = ((JSONObject)(friends.get(i))).getString("friend1");
+                        String friend2 = ((JSONObject)(friends.get(i))).getString("friend2");
+                        int accepted = Integer.parseInt(((JSONObject)(friends.get(i))).getString("accepted"));
+                        friend = new Friends(friend1, friend2,accepted);
+                        friendList.add(friend);
                     }
                     return json.getString(TAG_MESSAGE);
                 }else{
@@ -138,7 +150,7 @@ public class SearchResultsActivity extends AppCompatActivity {
             if (file_url != null){
                 Toast.makeText(context, file_url, Toast.LENGTH_LONG).show();
             }
-            adapter = new FriendsLargeRecyclerAdaptor(searchList);
+            adapter = new FriendsLargeRecyclerAdaptor(searchList, friendList, context);
             recyclerView.setAdapter(adapter);
             //adapter.notifyDataSetChanged();
         }
