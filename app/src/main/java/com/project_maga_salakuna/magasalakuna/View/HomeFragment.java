@@ -118,8 +118,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // Click action
-                Intent intent = new Intent(activity, AddCheckInActivity.class);
-                startActivity(intent);
+                MainActivity mainActivity = (MainActivity) getActivity();
+                mainActivity.refresh();
             }
         });
         mMapController = mMapView.getController();
@@ -307,8 +307,6 @@ public class HomeFragment extends Fragment {
                         checkIn = new CheckIn(checkinid, uid, status, timestamp, at, longitude, lattitude, user);
                         checkIns.add(checkIn);
                     }
-
-                    System.out.println("Ckeck ins size: ===========================" + checkins.length());
                     return json.getString(TAG_MESSAGE);
                 } else {
                     Log.d("Login Failure!", json.getString(TAG_MESSAGE));

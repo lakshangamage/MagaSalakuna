@@ -25,7 +25,6 @@ public class RecyclerAdaptor extends RecyclerView.Adapter<RecyclerAdaptor.Recycl
     public RecyclerAdaptor(ArrayList<User> friendList) {
         this.friendList = friendList;
     }
-
     @Override
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.friend_row_layout,parent,false);
@@ -33,7 +32,6 @@ public class RecyclerAdaptor extends RecyclerView.Adapter<RecyclerAdaptor.Recycl
         RecyclerViewHolder recyclerViewHolder = new RecyclerViewHolder(view);
         return recyclerViewHolder;
     }
-
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, int position) {
         holder.nameTxt.setText(friendList.get(position).getFirstName() + " "+ friendList.get(position).getLastName() );
@@ -47,17 +45,14 @@ public class RecyclerAdaptor extends RecyclerView.Adapter<RecyclerAdaptor.Recycl
         }
 
     }
-
     @Override
     public int getItemCount() {
         return friendList.size();
     }
-
     @Override
     public void onClick(View view) {
 
     }
-
     public static class RecyclerViewHolder extends RecyclerView.ViewHolder{
         ImageView photoview = null;
         TextView nameTxt = null;

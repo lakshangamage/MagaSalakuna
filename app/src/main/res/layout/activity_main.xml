@@ -45,10 +45,13 @@
         android:layout_gravity ="start"
         app:theme="@android:style/Theme.Light"
         app:menu="@menu/drawermenu"
-        >
-
-    </android.support.design.widget.NavigationView>
-
-
+        />
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/friendsrecyclervirew"
+            android:scrollbars="vertical"
+            android:background="@color/colorPrimaryDark"
+            android:layout_gravity ="end"/>
 
 </android.support.v4.widget.DrawerLayout>
