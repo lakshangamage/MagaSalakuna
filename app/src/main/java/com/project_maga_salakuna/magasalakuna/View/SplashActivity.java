@@ -39,11 +39,12 @@ public class SplashActivity extends AppCompatActivity {
                         loginIntent.putExtra("loginmethod","fb");
                         startActivity(loginIntent);
                         overridePendingTransition(R.anim.pullright_transition, R.anim.pushleft_transition);
+                        finish();
                     }else{
                         Intent loginIntent = new Intent(SplashActivity.this,LoginActivity.class);
-
                         startActivity(loginIntent);
                         overridePendingTransition(R.anim.pullright_transition, R.anim.pushleft_transition);
+                        finish();
                     }
 
                 }else{

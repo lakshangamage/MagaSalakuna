@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -98,8 +99,14 @@ public class MainActivity extends AppCompatActivity {
         return accessToken != null;
     }
     public void logout(MenuItem item){
+        SharedPreferences prefs = getSharedPreferences(
+                "com.project_maga_salakuna.magasalakuna", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("isLoggedIn", false);
+        editor.commit();
         Intent intent = new Intent(MainActivity.this,LoginActivity.class);
         startActivity(intent);
+        finish();
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

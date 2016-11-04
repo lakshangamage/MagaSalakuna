@@ -127,8 +127,8 @@ public class SignInActivity extends Activity {
                     editor.putString("phone", phone);
                     editor.putString("picture", picture);
                     editor.commit();
-                    finish();
                     startActivity(i);
+                    finish();
                     return json.getString(TAG_MESSAGE);
                 }else{
                     Log.d("Login Failure!", json.getString(TAG_MESSAGE));

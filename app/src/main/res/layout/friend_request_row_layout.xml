@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="100dp"
+    android:gravity="center_vertical"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:background="#ffffff"
+    android:layout_marginBottom="5dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:elevation="10dp">
+
+    <ImageView
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:id="@+id/photoView"
+        android:layout_marginRight="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Full Name"
+        android:id="@+id/fullnameTxt"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_toRightOf="@+id/photoView"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="email address"
+        android:id="@+id/emailTxtView"
+        android:layout_alignStart="@id/fullnameTxt"
+        android:layout_alignLeft="@id/fullnameTxt"
+        android:layout_below="@id/fullnameTxt"
+        android:textColor="@color/colorPrimaryDark" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:id="@+id/rejectfriendbtn"
+        android:text="Reject"
+        android:textColor="@android:color/white"
+        android:background="@drawable/rejectfriendbutton"
+        android:textAllCaps="false"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:id="@+id/addfriendbtn"
+        android:text="Confirm"
+        android:textColor="@android:color/white"
+        android:background="@drawable/addfriendbutton"
+        android:textAllCaps="false"
+        android:layout_toStartOf="@id/rejectfriendbtn"
+        android:layout_toLeftOf="@id/rejectfriendbtn"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="10dp"
+        />
+
+    <!--<ImageButton-->
+    <!--android:layout_width="40dp"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:id="@+id/addfriendbtn"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_alignParentEnd="true"-->
+    <!--android:src="@drawable/addfriendbtn"-->
+    <!--android:background="@android:color/transparent"-->
+    <!--android:scaleType="fitCenter"-->
+    <!--android:adjustViewBounds="true"/>-->
+
+</RelativeLayout>

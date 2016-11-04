@@ -15,7 +15,6 @@
         android:id="@+id/friendsrecyclervirew"
         android:scrollbars="vertical"
         android:background="@color/colorPrimaryDark">
-
     </android.support.v7.widget.RecyclerView>
 
 </RelativeLayout>

@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -79,8 +80,11 @@ public class FriendsLargeRecyclerAdaptor extends RecyclerView.Adapter<FriendsLar
                     holder.addBtn.setBackgroundColor(0xffffff);
                     holder.addBtn.setEnabled(false);
                 }else{
+                    holder.addBtn.setTextColor(Color.parseColor("#249e00"));
+                    holder.addBtn.setText(Html.fromHtml("&#x2713") + " Friends");
+                    //button.setBackground(null);
+                    holder.addBtn.setBackgroundColor(0xffffff);
                     holder.addBtn.setEnabled(false);
-                    holder.addBtn.setVisibility(View.INVISIBLE);
                 }
             }
         }
