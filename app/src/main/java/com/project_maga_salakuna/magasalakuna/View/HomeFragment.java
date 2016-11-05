@@ -25,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.project_maga_salakuna.magasalakuna.Controller.JSONParser;
@@ -44,6 +45,7 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.Projection;
 import org.osmdroid.views.overlay.FolderOverlay;
 import org.osmdroid.views.overlay.Marker;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +67,7 @@ public class HomeFragment extends Fragment {
     private GeoPoint userLocation;
     private Activity activity;
     private CircleView circleView;
+    private TextView distanceText;
     private SeekBar seekBar;
     FloatingActionButton fab;
     FloatingActionButton refreshfab;
@@ -117,23 +120,32 @@ public class HomeFragment extends Fragment {
         new GetCheckins().execute();
         circleView = (CircleView) view.findViewById(R.id.circle_drawer_view);
         seekBar = (SeekBar) view.findViewById(R.id.seekbar);
-
+        distanceText = (TextView) view.findViewById(R.id.distanceText);
         seekBar.setMax( circleView.getBounds() );
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 circleView.resizeCircle(i);
+                GeoPoint circleCentrePoint = geoPointFromScreenCoords(circleView.getMiddleX(),circleView.getMiddleY(),mMapView);
+                GeoPoint farestPoint = geoPointFromScreenCoords(circleView.getRightVal(),circleView.getMiddleY(),mMapView);
+                double maxDistance = distFrom(circleCentrePoint.getLatitude(),circleCentrePoint.getLongitude(),farestPoint.getLatitude(),farestPoint.getLongitude());
+                int maxDis = (int) maxDistance;
+                if (maxDis>=1000){
+                    distanceText.setText(String.valueOf(maxDis/1000) + "km");
+                }else{
+                    distanceText.setText(String.valueOf(maxDis) + "m");
+                }
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
+                distanceText.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+                distanceText.setVisibility(View.INVISIBLE);
             }
         });
         return view;

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -38,12 +39,10 @@ public class FriendsFragment extends Fragment {
     public ArrayList<User> friendList=null;
     View view = null;
     Activity activity;
-    MaterialSearchView searchView;
-    private ProgressDialog pDialog;
-    String searchString="";
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
+    SwipeRefreshLayout swipeContainer;
     JSONParser jsonParser = new JSONParser();
     private static final String SEARCH_URL = "http://176.32.230.51/pathmila.com/maga_salakuna/searchfriendrequests.php";
     private static final String TAG_SUCCESS = "success";
@@ -67,6 +66,7 @@ public class FriendsFragment extends Fragment {
         activity = getActivity();
         friendList = new ArrayList<>();
         recyclerView = (RecyclerView) view.findViewById(R.id.friendsrecyclervirew);
+        configureSwipeLayout();
         new SearchFriendRequests().execute();
         return view;
     }
@@ -103,11 +103,10 @@ public class FriendsFragment extends Fragment {
                 // json success tag
                 success = json.getInt(TAG_SUCCESS);
 
-
+                friendList = new ArrayList<>();
                 if (success == 1) {
                     JSONArray users = json.getJSONArray("users");
                     User user = null;
-                    friendList = new ArrayList<>();
                     for (int i = 0; i< users.length();i++){
                         String id = ((JSONObject)(users.get(i))).getString("id");
                         String firstname = ((JSONObject)(users.get(i))).getString("first_name");
@@ -139,8 +138,29 @@ public class FriendsFragment extends Fragment {
             }
             adapter = new FriendRequestsRecyclerAdaptor(friendList,getActivity());
             recyclerView.setAdapter(adapter);
+            if (swipeContainer.isRefreshing()){
+                swipeContainer.setRefreshing(false);
+            }
             //adapter.notifyDataSetChanged();
         }
+    }
+    public void configureSwipeLayout(){
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchTimelineAsync();
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+    }
+    public void fetchTimelineAsync() {
+        new SearchFriendRequests().execute();
     }
 
 

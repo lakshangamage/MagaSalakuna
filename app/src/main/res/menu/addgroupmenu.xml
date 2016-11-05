@@ -1,0 +1,9 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_create_group"
+        android:icon="@drawable/checked"
+        android:title="nearby"
+        app:showAsAction="always"
+        />
+</menu>

@@ -37,7 +37,6 @@ import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.project_maga_salakuna.magasalakuna.Controller.FriendsSmallRecyclerAdaptor;
 import com.project_maga_salakuna.magasalakuna.Controller.JSONParser;
-import com.project_maga_salakuna.magasalakuna.Controller.FriendsLargeRecyclerAdaptor;
 import com.project_maga_salakuna.magasalakuna.Controller.ViewPagerAdaptor;
 import com.project_maga_salakuna.magasalakuna.Model.CheckIn;
 import com.project_maga_salakuna.magasalakuna.Model.User;
@@ -169,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
         viewPagerAdaptor.addFragments(new HomeFragment(),"Home");
         viewPagerAdaptor.addFragments(new CheckInFragment(),"Check Ins");
         viewPagerAdaptor.addFragments(new FriendsFragment(),"Friends");
-        viewPagerAdaptor.addFragments(new EventsFragment(),"Events");
+        viewPagerAdaptor.addFragments(new GroupsFragment(),"Events");
         viewPager.setAdapter(viewPagerAdaptor);
         viewPager.setOffscreenPageLimit(4);
         tabLayout.setupWithViewPager(viewPager);
@@ -313,8 +312,6 @@ public class MainActivity extends AppCompatActivity {
 
                 // json success tag
                 success = json.getInt(TAG_SUCCESS);
-
-
                 if (success == 1) {
                     JSONArray checkins = json.getJSONArray("checkins");
                     JSONArray users = json.getJSONArray("users");

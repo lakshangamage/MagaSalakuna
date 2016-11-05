@@ -1,79 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="100dp"
-    android:gravity="center_vertical"
-    android:paddingTop="5dp"
-    android:paddingBottom="5dp"
-    android:paddingLeft="15dp"
-    android:paddingRight="15dp"
-    android:background="#ffffff"
-    android:layout_marginBottom="5dp"
-    android:layout_marginLeft="5dp"
-    android:layout_marginRight="5dp"
-    android:elevation="10dp">
+<android.support.v7.widget.CardView
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card_view:cardCornerRadius="4dp"
+    card_view:cardBackgroundColor="#ffffff"
+    android:background="@android:color/white"
+    card_view:cardUseCompatPadding="true"
+    card_view:cardElevation="4dp"
+    card_view:cardMaxElevation="6dp">
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent" android:layout_height="100dp"
+        android:gravity="center_vertical"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:background="#ffffff"
+        >
 
-    <ImageView
-        android:layout_width="90dp"
-        android:layout_height="90dp"
-        android:id="@+id/photoView"
-        android:layout_marginRight="10dp" />
+        <ImageView
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:id="@+id/photoView"
+            android:layout_marginRight="10dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Full Name"
-        android:id="@+id/fullnameTxt"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_toRightOf="@+id/photoView"
-        android:textColor="@color/colorPrimaryDark"
-        android:textStyle="bold" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="email address"
-        android:id="@+id/emailTxtView"
-        android:layout_alignStart="@id/fullnameTxt"
-        android:layout_alignLeft="@id/fullnameTxt"
-        android:layout_below="@id/fullnameTxt"
-        android:textColor="@color/colorPrimaryDark" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="phone number"
-        android:id="@+id/phoneTxt"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@id/photoView"
-        android:layout_toEndOf="@id/photoView"
-        android:textColor="@color/colorPrimaryDark" />
-
-        <Button
+        <TextView
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:id="@+id/addfriendbtn"
-            android:text="Add Friend"
-            android:textColor="@android:color/white"
-            android:background="@drawable/addfriendbutton"
-            android:textAllCaps="false"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            />
-    <!--<ImageButton-->
-        <!--android:layout_width="40dp"-->
-        <!--android:layout_height="40dp"-->
-        <!--android:id="@+id/addfriendbtn"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_alignParentEnd="true"-->
-        <!--android:src="@drawable/addfriendbtn"-->
-        <!--android:background="@android:color/transparent"-->
-        <!--android:scaleType="fitCenter"-->
-        <!--android:adjustViewBounds="true"/>-->
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Full Name"
+            android:id="@+id/fullnameTxt"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_toRightOf="@+id/photoView"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold" />
 
-</RelativeLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="email address"
+            android:id="@+id/emailTxtView"
+            android:layout_alignStart="@id/fullnameTxt"
+            android:layout_alignLeft="@id/fullnameTxt"
+            android:layout_below="@id/fullnameTxt"
+            android:textColor="@color/colorPrimaryDark" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="phone number"
+            android:id="@+id/phoneTxt"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@id/photoView"
+            android:layout_toEndOf="@id/photoView"
+            android:textColor="@color/colorPrimaryDark" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:id="@+id/addfriendbtn"
+                android:text="Add Friend"
+                android:textColor="@android:color/white"
+                android:background="@drawable/addfriendbutton"
+                android:textAllCaps="false"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                />
+        <!--<ImageButton-->
+            <!--android:layout_width="40dp"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:id="@+id/addfriendbtn"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_alignParentEnd="true"-->
+            <!--android:src="@drawable/addfriendbtn"-->
+            <!--android:background="@android:color/transparent"-->
+            <!--android:scaleType="fitCenter"-->
+            <!--android:adjustViewBounds="true"/>-->
+
+    </RelativeLayout>
+    </android.support.v7.widget.CardView>

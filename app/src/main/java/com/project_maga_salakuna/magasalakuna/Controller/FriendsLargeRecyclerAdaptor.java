@@ -42,7 +42,7 @@ public class FriendsLargeRecyclerAdaptor extends RecyclerView.Adapter<FriendsLar
     Context context = null;
 
     private static final String SEARCH_URL = "http://176.32.230.51/pathmila.com/maga_salakuna/addFriend.php";
-
+    private static final String acceptURL = "http://176.32.230.51/pathmila.com/maga_salakuna/acceptFriend.php";
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_MESSAGE = "message";
     public FriendsLargeRecyclerAdaptor(ArrayList<User> searchList, ArrayList<Friends> friendList, Context context) {
@@ -72,13 +72,23 @@ public class FriendsLargeRecyclerAdaptor extends RecyclerView.Adapter<FriendsLar
         if (id.equals(MainActivity.id)) return;
         for (Friends friend :
                 friendList) {
-            if (friend.getFriend1().equals(id) || friend.getFriend2().equals(id)){
+            if (friend.getFriend2().equals(id)){
                 if (friend.getAccepted() == 0){
                     holder.addBtn.setTextColor(Color.parseColor("#a84d4d"));
                     holder.addBtn.setText("Request Sent");
                     //button.setBackground(null);
                     holder.addBtn.setBackgroundColor(0xffffff);
                     holder.addBtn.setEnabled(false);
+                }else{
+                    holder.addBtn.setTextColor(Color.parseColor("#249e00"));
+                    holder.addBtn.setText(Html.fromHtml("&#x2713") + " Friends");
+                    //button.setBackground(null);
+                    holder.addBtn.setBackgroundColor(0xffffff);
+                    holder.addBtn.setEnabled(false);
+                }
+            }else if(friend.getFriend1().equals(id)){
+                if (friend.getAccepted() == 0){
+                    holder.addBtn.setText("Confirm");
                 }else{
                     holder.addBtn.setTextColor(Color.parseColor("#249e00"));
                     holder.addBtn.setText(Html.fromHtml("&#x2713") + " Friends");
@@ -98,7 +108,7 @@ public class FriendsLargeRecyclerAdaptor extends RecyclerView.Adapter<FriendsLar
     public void onClick(View view) {
 
     }
-    public static class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         ImageView photoview = null;
         TextView nameTxt = null;
         TextView emailTxt = null;
@@ -126,12 +136,16 @@ public class FriendsLargeRecyclerAdaptor extends RecyclerView.Adapter<FriendsLar
             if (view.getId() == addBtn.getId()){
                 User user = searchList.get(getAdapterPosition());
                 Button button = (Button) view;
-                new AddFriend(user.getId(),context,button).execute();
+                if (button.getText().equals("Confirm")){
+                    new ConfirmFriend(user.getId(),context,button).execute();
+                }else{
+                    new AddFriend(user.getId(),context,button).execute();
+                }
             }
         }
     }
 
-    static class AddFriend extends AsyncTask<String, String, String> {
+    public class AddFriend extends AsyncTask<String, String, String> {
         String id;
         JSONParser jsonParser = new JSONParser();
         Context context;
@@ -193,6 +207,73 @@ public class FriendsLargeRecyclerAdaptor extends RecyclerView.Adapter<FriendsLar
             }
             button.setTextColor(Color.parseColor("#a84d4d"));
             button.setText("Request Sent");
+            //button.setBackground(null);
+            button.setBackgroundColor(0xffffff);
+            button.setEnabled(false);
+        }
+    }
+    public class ConfirmFriend extends AsyncTask<String, String, String> {
+        String id;
+        JSONParser jsonParser = new JSONParser();
+        Context context;
+        String friendId;
+        Button button;
+        public ConfirmFriend(String friendId, Context context, Button button){
+            this.friendId = friendId;
+            this.context = context;
+            this.button = button;
+        }
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            id = MainActivity.id;
+        }
+
+        @Override
+        protected String doInBackground(String... args) {
+            // TODO Auto-generated method stub
+            // Check for success tag
+            int success;
+            try {
+                // Building Parameters
+
+                List<NameValuePair> params = new ArrayList<NameValuePair>();
+                params.add(new BasicNameValuePair("friend1", friendId));
+                params.add(new BasicNameValuePair("friend2", id));
+
+                Log.d("request!", "starting");
+                // getting product details by making HTTP request
+                JSONObject json = jsonParser.makeHttpRequest(
+                        acceptURL, "POST", params);
+
+                // check your log for json response
+                Log.d("Adding attempt", json.toString());
+
+                // json success tag
+                success = json.getInt(TAG_SUCCESS);
+
+
+                if (success == 1) {
+                    return json.getString(TAG_MESSAGE);
+                }else{
+                    Log.d("Login Failure!", json.getString(TAG_MESSAGE));
+                    //Toast.makeText(Login.this, "Invalid login details", Toast.LENGTH_LONG).show();
+                    return json.getString(TAG_MESSAGE);
+
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+        protected void onPostExecute(String file_url) {
+            if (file_url != null){
+                Toast.makeText(context, file_url, Toast.LENGTH_LONG).show();
+            }
+            button.setTextColor(Color.parseColor("#249e00"));
+            button.setText(Html.fromHtml("&#x2713") + " Friends");
             //button.setBackground(null);
             button.setBackgroundColor(0xffffff);
             button.setEnabled(false);
