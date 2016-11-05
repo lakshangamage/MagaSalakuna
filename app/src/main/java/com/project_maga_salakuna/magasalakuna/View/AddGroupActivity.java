@@ -20,8 +20,11 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -50,6 +53,7 @@ import java.util.List;
 public class AddGroupActivity extends AppCompatActivity {
     Context context = this;
     public ArrayList<User> friendList=null;
+    public ArrayList<User> tempfriendList=null;
     public ArrayList<User> selectedfriendList=new ArrayList<>();
     private Toolbar toolbar;
     private CircularImageView circularImageView;
@@ -60,6 +64,8 @@ public class AddGroupActivity extends AppCompatActivity {
     private RecyclerView.Adapter selectedfriendsadapter;
     private RecyclerView.LayoutManager friendslayoutManager;
     private RecyclerView.LayoutManager selectedfriendslayoutManager;
+    private EditText searchText;
+
     String profileimage;
     JSONParser jsonParser = new JSONParser();
     private static final String SEARCH_URL = "http://176.32.230.51/pathmila.com/maga_salakuna/friendlist.php";
@@ -251,5 +257,34 @@ public class AddGroupActivity extends AppCompatActivity {
         selectedRecyclerView.setLayoutManager(selectedfriendslayoutManager);
         selectedfriendsadapter = new SelectedFriendsRecyclerAdaptor(friendList,context);
         selectedRecyclerView.setAdapter(selectedfriendsadapter);
+    }
+    private void configureSearchText(){
+        searchText = (EditText) findViewById(R.id.searchText);
+        searchText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.length() >= 3){
+                    for (User user: friendList){
+                        if (user.getFirstName().contains(charSequence)){
+                            tempfriendList.add(user);
+                        }
+                    }
+                }else {
+                    tempfriendList.addAll(friendList);
+                }
+                friendsadapter = new FriendListRecyclerAdaptor(tempfriendList,context);
+                friendsRecyclerView.setAdapter(friendsadapter);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 }
