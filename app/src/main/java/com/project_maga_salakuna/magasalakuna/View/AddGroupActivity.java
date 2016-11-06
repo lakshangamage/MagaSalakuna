@@ -80,6 +80,7 @@ public class AddGroupActivity extends AppCompatActivity {
         configureGui();
         configureSelectedRecyclerView();
         new SearchFriends().execute();
+        configureSearchText();
     }
     public void configureToolbar(){
         toolbar = (Toolbar) findViewById(R.id.toolbar);
