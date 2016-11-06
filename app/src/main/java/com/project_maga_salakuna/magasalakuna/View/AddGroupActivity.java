@@ -2,6 +2,7 @@ package com.project_maga_salakuna.magasalakuna.View;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -29,6 +30,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -65,10 +67,12 @@ public class AddGroupActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager friendslayoutManager;
     private RecyclerView.LayoutManager selectedfriendslayoutManager;
     private EditText searchText;
-
+    private ProgressDialog pDialog;
     String profileimage;
+    int previousLength = 3;
     JSONParser jsonParser = new JSONParser();
     private static final String SEARCH_URL = "http://176.32.230.51/pathmila.com/maga_salakuna/friendlist.php";
+    private static final String CREATE_URL = "http://176.32.230.51/pathmila.com/maga_salakuna/creategroups.php";
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_MESSAGE = "message";
 
@@ -76,6 +80,7 @@ public class AddGroupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_group);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         configureToolbar();
         configureGui();
         configureSelectedRecyclerView();
@@ -98,7 +103,7 @@ public class AddGroupActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.action_create_group:
-
+                new CreateGroup().execute();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -246,17 +251,20 @@ public class AddGroupActivity extends AppCompatActivity {
         selectedfriendsadapter.notifyItemInserted(selectedfriendList.size()-1);
         selectedfriendsadapter.notifyItemRangeChanged(selectedfriendList.size()-1,selectedfriendList.size());
     }
+    public boolean isSelected(User user){
+        return selectedfriendList.contains(user);
+    }
     public void removeFriendfromGroup(User user) {
         int position = selectedfriendList.indexOf(user);
         selectedfriendList.remove(user);
-        selectedfriendsadapter.notifyItemInserted(position);
+        selectedfriendsadapter.notifyItemRemoved(position);
         selectedfriendsadapter.notifyItemRangeChanged(position, selectedfriendList.size());
     }
     private void configureSelectedRecyclerView(){
         selectedRecyclerView = (RecyclerView) findViewById(R.id.selectedfriendsrecyclervirew);
         selectedfriendslayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         selectedRecyclerView.setLayoutManager(selectedfriendslayoutManager);
-        selectedfriendsadapter = new SelectedFriendsRecyclerAdaptor(friendList,context);
+        selectedfriendsadapter = new SelectedFriendsRecyclerAdaptor(selectedfriendList,context);
         selectedRecyclerView.setAdapter(selectedfriendsadapter);
     }
     private void configureSearchText(){
@@ -270,12 +278,26 @@ public class AddGroupActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (charSequence.length() >= 3){
-                    for (User user: friendList){
-                        if (user.getFirstName().contains(charSequence)){
-                            tempfriendList.add(user);
+                    if (charSequence.length() > previousLength){
+                        previousLength++;
+                        for (User user: tempfriendList){
+                            if (!user.getFirstName().contains(charSequence)){
+                                tempfriendList.remove(user);
+                            }
+                        }
+                    }else {
+                        if (previousLength!=3)
+                            previousLength--;
+                        tempfriendList = new ArrayList<User>();
+                        for (User user: friendList){
+                            if (user.getFirstName().contains(charSequence)){
+                                tempfriendList.add(user);
+                            }
                         }
                     }
+
                 }else {
+                    tempfriendList = new ArrayList<User>();
                     tempfriendList.addAll(friendList);
                 }
                 friendsadapter = new FriendListRecyclerAdaptor(tempfriendList,context);
@@ -287,5 +309,65 @@ public class AddGroupActivity extends AppCompatActivity {
 
             }
         });
+    }
+    class CreateGroup extends AsyncTask<String, String, String> {
+        String name;
+        boolean failure = false;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(context);
+            pDialog.setMessage("Creating Group...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(true);
+            pDialog.show();
+            name = nametext.getText().toString();
+        }
+
+        @Override
+        protected String doInBackground(String... args) {
+            // TODO Auto-generated method stub
+            // Check for success tag
+            int success;
+            try {
+                // Building Parameters
+                List<NameValuePair> params = new ArrayList<NameValuePair>();
+                ArrayList<String> idList = new ArrayList<>();
+                idList.add(MainActivity.id);
+                for (User user : selectedfriendList){
+                    idList.add(user.getId());
+                }
+                JSONObject request = new JSONObject();
+                request.put("name",name);
+                request.put("picture", profileimage);
+                JSONArray jsonArray = new JSONArray(idList);
+                request.put("members", jsonArray);
+                String requestString = request.toString();
+                params.add(new BasicNameValuePair("group", requestString));
+                Log.d("request!", "starting");
+                // getting product details by making HTTP request
+                jsonParser = new JSONParser();
+                JSONObject json = null;
+                json = jsonParser.makeHttpRequest(
+                        CREATE_URL, "POST_JSON", params);
+
+                // check your log for json response
+                Log.d("Login attempt", json.toString());
+                // json success tag
+                success = json.getInt(TAG_SUCCESS);
+                return json.getString(TAG_MESSAGE);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        protected void onPostExecute(String file_url) {
+            Toast.makeText(context, file_url, Toast.LENGTH_LONG).show();
+            finish();
+            //friendsadapter.notifyDataSetChanged();
+        }
     }
 }

@@ -4,23 +4,28 @@
     android:id="@+id/swipeContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/toolbar_container"
+        android:layout_height="wrap_content"
         android:id="@+id/friendsrecyclervirew"
         android:scrollbars="vertical"
-        android:background="@android:color/white">
+        android:background="@color/colorPrimary">
     </android.support.v7.widget.RecyclerView>
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
-        app:backgroundTint="#f8cd26"
-        android:background="@drawable/checkinbtnicon"
-        android:src="@android:drawable/ic_dialog_email" />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            app:backgroundTint="#f8cd26"
+            android:background="@drawable/checkinbtnicon"
+            android:src="@android:drawable/ic_dialog_email" />
+
+    </FrameLayout>
 </android.support.v4.widget.SwipeRefreshLayout>
 

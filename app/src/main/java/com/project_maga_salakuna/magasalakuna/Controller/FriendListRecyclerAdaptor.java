@@ -38,9 +38,11 @@ import java.util.List;
 public class FriendListRecyclerAdaptor extends RecyclerView.Adapter<FriendListRecyclerAdaptor.RecyclerViewHolder> implements View.OnClickListener{
     ArrayList<User> friendList = null;
     Context context = null;
+    AddGroupActivity addGroupActivity;
     public FriendListRecyclerAdaptor(ArrayList<User> friendList, Context context) {
         this.context = context;
         this.friendList = friendList;
+        addGroupActivity= (AddGroupActivity) context;
     }
     @Override
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -51,12 +53,18 @@ public class FriendListRecyclerAdaptor extends RecyclerView.Adapter<FriendListRe
     }
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, int position) {
-        holder.nameTxt.setText(friendList.get(position).getFirstName() + " "+ friendList.get(position).getLastName() );
-        if(friendList.get(position).getPicture() !=null){
-            byte[] decodedString = Base64.decode(friendList.get(position).getPicture(), Base64.DEFAULT);
+        User user = friendList.get(position);
+        holder.nameTxt.setText(user.getFirstName() + " "+ user.getLastName() );
+        if(user.getPicture() !=null){
+            byte[] decodedString = Base64.decode(user.getPicture(), Base64.DEFAULT);
             Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
             holder.photoview.setBackgroundResource(0);
             holder.photoview.setImageBitmap(decodedByte);
+        }
+        if (isSelected(user)){
+            holder.checkBox.setOnCheckedChangeListener(null);
+            holder.checkBox.setChecked(true);
+            holder.checkBox.setOnCheckedChangeListener(holder);
         }
     }
     @Override
@@ -68,18 +76,14 @@ public class FriendListRecyclerAdaptor extends RecyclerView.Adapter<FriendListRe
 
     }
 
-    public void removeItem(int position){
-        friendList.remove(position);
-        notifyItemRemoved(position);
-        notifyItemRangeChanged(position,friendList.size());
-    }
     public void addFriend(User user){
-        AddGroupActivity addGroupActivity = (AddGroupActivity) context;
         addGroupActivity.addFriendToGroup(user);
     }
     public void removeFriend(User user){
-        AddGroupActivity addGroupActivity = (AddGroupActivity) context;
         addGroupActivity.removeFriendfromGroup(user);
+    }
+    public boolean isSelected(User user){
+        return addGroupActivity.isSelected(user);
     }
     public class RecyclerViewHolder extends RecyclerView.ViewHolder implements CompoundButton.OnCheckedChangeListener{
         ImageView photoview = null;
