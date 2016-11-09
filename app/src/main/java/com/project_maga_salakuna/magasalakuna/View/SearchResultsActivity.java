@@ -150,6 +150,11 @@ public class SearchResultsActivity extends AppCompatActivity {
             if (file_url != null){
                 Toast.makeText(context, file_url, Toast.LENGTH_LONG).show();
             }
+            for (User user : searchList){
+                if (user.getId().equals(MainActivity.id)){
+                    searchList.remove(user);
+                }
+            }
             adapter = new FriendsLargeRecyclerAdaptor(searchList, friendList, context);
             recyclerView.setAdapter(adapter);
             //adapter.notifyDataSetChanged();

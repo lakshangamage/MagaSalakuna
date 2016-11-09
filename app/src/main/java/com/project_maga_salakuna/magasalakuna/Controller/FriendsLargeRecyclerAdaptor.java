@@ -59,6 +59,7 @@ public class FriendsLargeRecyclerAdaptor extends RecyclerView.Adapter<FriendsLar
     }
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, int position) {
+        String id = searchList.get(position).getId();
         holder.nameTxt.setText(searchList.get(position).getFirstName() + " "+ searchList.get(position).getLastName() );
         holder.emailTxt.setText(searchList.get(position).getEmail());
         holder.phoneTxt.setText(searchList.get(position).getPhone());
@@ -68,8 +69,6 @@ public class FriendsLargeRecyclerAdaptor extends RecyclerView.Adapter<FriendsLar
             holder.photoview.setBackgroundResource(0);
             holder.photoview.setImageBitmap(decodedByte);
         }
-        String id = searchList.get(position).getId();
-        if (id.equals(MainActivity.id)) return;
         for (Friends friend :
                 friendList) {
             if (friend.getFriend2().equals(id)){

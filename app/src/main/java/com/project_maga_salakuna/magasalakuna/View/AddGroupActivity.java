@@ -89,7 +89,7 @@ public class AddGroupActivity extends AppCompatActivity {
     }
     public void configureToolbar(){
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Home");
+        toolbar.setTitle("Create Group");
         setSupportActionBar(toolbar);
     }
     @Override

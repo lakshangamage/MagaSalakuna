@@ -10,6 +10,9 @@ public class User {
     private String email;
     private String phone;
     private String picture;
+    private double lslongitude;
+    private double lslattitude;
+    private long time;
 
     public User() {
     }
@@ -29,6 +32,18 @@ public class User {
         this.email = email;
         this.phone = phone;
         this.picture = picture;
+    }
+
+    public User(String id, String firstName, String lastName, String email, String phone, String picture, double lslongitude, double lslattitude, long time) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phone = phone;
+        this.picture = picture;
+        this.lslongitude = lslongitude;
+        this.lslattitude = lslattitude;
+        this.time = time;
     }
 
     public String getId() {
@@ -77,5 +92,29 @@ public class User {
 
     public void setPicture(String picture) {
         this.picture = picture;
+    }
+
+    public double getLslongitude() {
+        return lslongitude;
+    }
+
+    public void setLslongitude(double lslongitude) {
+        this.lslongitude = lslongitude;
+    }
+
+    public double getLslattitude() {
+        return lslattitude;
+    }
+
+    public void setLslattitude(double lslattitude) {
+        this.lslattitude = lslattitude;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
     }
 }

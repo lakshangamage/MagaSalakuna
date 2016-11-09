@@ -1,5 +1,6 @@
 package com.project_maga_salakuna.magasalakuna.View;
 
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
@@ -9,6 +10,7 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -43,12 +45,15 @@ import com.project_maga_salakuna.magasalakuna.Model.User;
 import com.project_maga_salakuna.magasalakuna.R;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
     ImageView imageView;
@@ -71,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     public ArrayList<User> friendList=null;
-    public ArrayList<User> searchList=null;
+    public ArrayList<User> searchList=new ArrayList<>();
     Context context = this;
     JSONParser jsonParser = new JSONParser();
     private String searchString;
@@ -168,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
         viewPagerAdaptor.addFragments(new HomeFragment(),"Home");
         viewPagerAdaptor.addFragments(new CheckInFragment(),"Check Ins");
         viewPagerAdaptor.addFragments(new FriendsFragment(),"Friends");
-        viewPagerAdaptor.addFragments(new GroupsFragment(),"Events");
+        viewPagerAdaptor.addFragments(new GroupsFragment(),"Groups");
         viewPager.setAdapter(viewPagerAdaptor);
         viewPager.setOffscreenPageLimit(4);
         tabLayout.setupWithViewPager(viewPager);

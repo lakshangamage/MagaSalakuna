@@ -5,6 +5,7 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
@@ -35,6 +36,7 @@ import com.project_maga_salakuna.magasalakuna.Model.User;
 import com.project_maga_salakuna.magasalakuna.R;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,6 +51,8 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 /**
@@ -75,10 +79,11 @@ public class HomeFragment extends Fragment {
     JSONParser jsonParser = new JSONParser();
     private ProgressDialog pDialog;
     private static final String SEARCH_URL = "http://176.32.230.51/pathmila.com/maga_salakuna/getcheckins.php";
+    private static final String updateURL = "http://176.32.230.51/pathmila.com/maga_salakuna/lastseen.php";
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_MESSAGE = "message";
     FolderOverlay poiMarkers;
-
+    boolean locationFound = false;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -156,11 +161,13 @@ public class HomeFragment extends Fragment {
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
+                locationFound = true;
                 currentxCoordinates = location.getLatitude();
                 currentyCoordinates = location.getLongitude();
-                //hideDialog();
+                hideDialog();
 //                Toast toast = Toast.makeText(getContext(), "Location Changed", Toast.LENGTH_SHORT);
 //                toast.show();
+                new UpdateLoationRemote().execute();
                 updateMap(checkIns);
             }
 
@@ -191,23 +198,25 @@ public class HomeFragment extends Fragment {
             return;
         }
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10000, 0, locationListener);
-//        progressDialog.setMessage("Waiting for Location...");
-//        showDialog();
-//        Timer timer = new Timer();
-//        timer.schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//                if(!locationSet){
-//                    if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) !=
-//                            PackageManager.PERMISSION_GRANTED &&
-//                            ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) !=
-//                                    PackageManager.PERMISSION_GRANTED) {
-//                        return;
-//                    }
-//                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListener);
-//                }
-//            }
-//        },10000);
+        progressDialog.setMessage("Waiting for Location...");
+        showDialog();
+        Timer timer = new Timer();
+        if (!locationFound) {
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    if (!locationSet) {
+                        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) !=
+                                PackageManager.PERMISSION_GRANTED &&
+                                ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                                        PackageManager.PERMISSION_GRANTED) {
+                            return;
+                        }
+                        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListener);
+                    }
+                }
+            }, 5000);
+        }
 
     }
     private void updateMap(ArrayList<CheckIn> checkIns) {
@@ -321,9 +330,9 @@ public class HomeFragment extends Fragment {
         protected void onPostExecute(String file_url) {
             // dismiss the dialog once product deleted
             pDialog.dismiss();
-            if (file_url != null) {
-                Toast.makeText(activity, file_url, Toast.LENGTH_LONG).show();
-            }
+//            if (file_url != null) {
+//                Toast.makeText(activity, file_url, Toast.LENGTH_LONG).show();
+//            }
             if (!mapUpdated) {
 
                 getLocation();
@@ -438,6 +447,23 @@ public class HomeFragment extends Fragment {
                 return;
             }
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, locationListener);
+            Timer timer = new Timer();
+            if (!locationFound) {
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        if (!locationSet) {
+                            if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) !=
+                                    PackageManager.PERMISSION_GRANTED &&
+                                    ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                                            PackageManager.PERMISSION_GRANTED) {
+                                return;
+                            }
+                            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListener);
+                        }
+                    }
+                }, 5000);
+            }
         }
     }
     public void refreshMapRange(){
@@ -490,5 +516,69 @@ public class HomeFragment extends Fragment {
         double dist = (float) (earthRadius * c);
 
         return dist;
+    }
+//    public void updateLocationInRemote(){
+//        Timer timer = new Timer();
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                new UpdateLoationRemote().execute();
+//            }
+//        },5000,60000*5);
+//    }
+    public class UpdateLoationRemote extends AsyncTask<String, String, String> {
+        String id;
+        long time = 0;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            id = MainActivity.id;
+            time = System.currentTimeMillis();
+        }
+
+        @Override
+        protected String doInBackground(String... args) {
+            // TODO Auto-generated method stub
+            // Check for success tag
+            int success;
+            try {
+                // Building Parameters
+
+                List<NameValuePair> params = new ArrayList<NameValuePair>();
+                params.add(new BasicNameValuePair("id", id));
+                params.add(new BasicNameValuePair("xCordinates", String.valueOf(currentxCoordinates)));
+                params.add(new BasicNameValuePair("yCordinates", String.valueOf(currentyCoordinates)));
+                params.add(new BasicNameValuePair("time", String.valueOf(time)));
+
+                Log.d("request!", "starting");
+                // getting product details by making HTTP request
+                JSONObject json = jsonParser.makeHttpRequest(
+                        updateURL, "POST", params);
+
+                // check your log for json response
+                Log.d("Adding attempt", json.toString());
+
+                // json success tag
+                success = json.getInt(TAG_SUCCESS);
+
+
+                if (success == 1) {
+                    return json.getString(TAG_MESSAGE);
+                }else{
+                    Log.d("Login Failure!", json.getString(TAG_MESSAGE));
+                    //Toast.makeText(Login.this, "Invalid login details", Toast.LENGTH_LONG).show();
+                    return json.getString(TAG_MESSAGE);
+
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+        protected void onPostExecute(String file_url) {
+
+        }
     }
 }

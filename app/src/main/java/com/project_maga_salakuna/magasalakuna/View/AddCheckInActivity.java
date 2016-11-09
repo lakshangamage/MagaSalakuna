@@ -146,8 +146,8 @@ public class AddCheckInActivity extends AppCompatActivity {
 
             for(POI poi:pois){
                 if(poi.mDescription.equalsIgnoreCase(at)){
-                    xCordinates = poi.mLocation.getLongitude();
-                    yCordinates = poi.mLocation.getLatitude();
+                    xCordinates = poi.mLocation.getLatitude();
+                    yCordinates = poi.mLocation.getLongitude();
                 }
             }
         }
