@@ -5,6 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.project_maga_salakuna.magasalakuna.View.GroupMapViewActivity">
+    <org.osmdroid.views.MapView android:id="@+id/mapview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,7 +38,4 @@
             android:id="@+id/headerimage"
             />
     </RelativeLayout>
-    <org.osmdroid.views.MapView android:id="@+id/mapview"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
 </RelativeLayout>

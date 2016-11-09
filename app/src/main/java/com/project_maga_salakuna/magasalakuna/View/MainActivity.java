@@ -25,6 +25,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -171,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPagerAdaptor = new ViewPagerAdaptor(getSupportFragmentManager());
         viewPagerAdaptor.addFragments(new HomeFragment(),"Home");
-        viewPagerAdaptor.addFragments(new CheckInFragment(),"Check Ins");
+        //viewPagerAdaptor.addFragments(new CheckInFragment(),"Check Ins");
         viewPagerAdaptor.addFragments(new FriendsFragment(),"Friends");
         viewPagerAdaptor.addFragments(new GroupsFragment(),"Groups");
         viewPager.setAdapter(viewPagerAdaptor);
@@ -257,7 +258,20 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+    public void jumptofriends(MenuItem item){
+        viewPager.setCurrentItem(1,true);
+        drawerLayout.closeDrawer(Gravity.LEFT);
+    }
+    public void jumptogroups(MenuItem item){
+        viewPager.setCurrentItem(2,true);
+        drawerLayout.closeDrawer(Gravity.LEFT);
 
+    }
+    public void jumptohome(MenuItem item){
+        viewPager.setCurrentItem(0,true);
+        drawerLayout.closeDrawer(Gravity.LEFT);
+
+    }
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
 

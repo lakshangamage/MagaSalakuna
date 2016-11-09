@@ -29,6 +29,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -188,6 +189,14 @@ public class AddGroupActivity extends AppCompatActivity {
             super.onPreExecute();
             friendslayoutManager = new LinearLayoutManager(context);
             friendsRecyclerView.setLayoutManager(friendslayoutManager);
+            friendsRecyclerView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    // Disallow the touch request for parent scroll on touch of child view
+                    view.getParent().requestDisallowInterceptTouchEvent(false);
+                    return true;
+                }
+            });
         }
 
         @Override
@@ -243,6 +252,7 @@ public class AddGroupActivity extends AppCompatActivity {
             }
             friendsadapter = new FriendListRecyclerAdaptor(friendList,context);
             friendsRecyclerView.setAdapter(friendsadapter);
+            friendsRecyclerView.setNestedScrollingEnabled(true);
             //friendsadapter.notifyDataSetChanged();
         }
     }
@@ -281,7 +291,7 @@ public class AddGroupActivity extends AppCompatActivity {
                     if (charSequence.length() > previousLength){
                         previousLength++;
                         for (User user: tempfriendList){
-                            if (!user.getFirstName().contains(charSequence)){
+                            if (!user.getFirstName().toLowerCase().contains(charSequence)){
                                 tempfriendList.remove(user);
                             }
                         }
@@ -290,7 +300,7 @@ public class AddGroupActivity extends AppCompatActivity {
                             previousLength--;
                         tempfriendList = new ArrayList<User>();
                         for (User user: friendList){
-                            if (user.getFirstName().contains(charSequence)){
+                            if (user.getFirstName().toLowerCase().contains(charSequence)){
                                 tempfriendList.add(user);
                             }
                         }

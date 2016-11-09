@@ -81,13 +81,14 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Already have an account?"
+            android:text="Sign Up with email"
             android:id="@+id/signinbtn"
             android:textSize="14dp"
             android:paddingLeft="79dp"
             android:paddingRight="79dp"
             android:paddingTop="17dp"
             android:paddingBottom="17dp"
+            android:layout_marginBottom="20dp"
             android:textColor="#ffffff"
             android:nestedScrollingEnabled="false"
             android:layout_gravity="center" />

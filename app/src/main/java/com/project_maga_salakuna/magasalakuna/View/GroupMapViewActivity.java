@@ -3,6 +3,8 @@ package com.project_maga_salakuna.magasalakuna.View;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -54,10 +56,10 @@ public class GroupMapViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_map_view);
-        configureToolbar();
         groupid = getIntent().getStringExtra("id");
         pic = getIntent().getStringExtra("pic");
         groupname = getIntent().getStringExtra("name");
+        configureToolbar();
         setImage();
         new getMembers().execute();
     }
@@ -103,7 +105,7 @@ public class GroupMapViewActivity extends AppCompatActivity {
                         String phone = ((JSONObject)(users.get(i))).getString("phone");
                         String picture = ((JSONObject)(users.get(i))).getString("picture");
                         double longitude = ((JSONObject) (users.get(i))).getDouble("longitude");
-                        double lattitude = ((JSONObject) (users.get(i))).getDouble("lattitude");
+                        double lattitude = ((JSONObject) (users.get(i))).getDouble("latitude");
                         long time = ((JSONObject) (users.get(i))).getLong("time");
                         user = new User(id, firstname, lastname, email, phone, picture, longitude, lattitude, time);
                         memberList.add(user);
@@ -143,7 +145,13 @@ public class GroupMapViewActivity extends AppCompatActivity {
             for (User user : users) {
                 Marker poiMarker = new Marker(mMapView);
                 poiMarker.setTitle(user.getFirstName() + " " + user.getLastName());
-
+                if(user.getPicture() !=null){
+                    byte[] decodedString = Base64.decode(user.getPicture(), Base64.DEFAULT);
+                    Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                    Drawable d = new BitmapDrawable(getResources(), decodedByte);
+                    poiMarker.setImage(d);
+                }
+                poiMarker.setIcon(getResources().getDrawable(R.drawable.mappointer));
                 poiMarker.setSnippet(timeConversion(user.getTime()));
                 poiMarker.setPosition(new GeoPoint(user.getLslattitude(), user.getLslongitude()));
                 poiMarkers.add(poiMarker);
@@ -152,6 +160,7 @@ public class GroupMapViewActivity extends AppCompatActivity {
             Marker endMarker = new Marker(mMapView);
             endMarker.setPosition(userLocation);
             endMarker.setTitle("You Are Here");
+            endMarker.setIcon(getResources().getDrawable(R.drawable.mappointer));
             endMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
             poiMarkers.add(endMarker);
             mMapView.getOverlays().add(poiMarkers);

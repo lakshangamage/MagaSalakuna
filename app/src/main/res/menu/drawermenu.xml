@@ -3,19 +3,23 @@
     <group android:checkableBehavior="single">
         <item android:id="@+id/home_drawer_menu"
             android:title="Home"
-            android:icon="@drawable/homeicon">
+            android:icon="@drawable/homeicon"
+            android:onClick="jumptohome">
+            >
         </item>
         <item android:id="@+id/friends_drawer_menu"
             android:title="Friends"
-            android:icon="@drawable/friendsicon">
+            android:icon="@drawable/friendsicon"
+            android:onClick="jumptofriends">
         </item>
-        <item android:id="@+id/checkin_drawer_menu"
-            android:title="Check Ins"
-            android:icon="@drawable/checkinicon">
-        </item>
+        <!--<item android:id="@+id/checkin_drawer_menu"-->
+        <!--android:title="Check Ins"-->
+        <!--android:icon="@drawable/checkinicon">-->
+        <!--</item>-->
         <item android:id="@+id/events_drawer_menu"
-            android:title="Events"
-            android:icon="@drawable/eventsicon">
+            android:title="Groups"
+            android:icon="@drawable/groupicon"
+            android:onClick="jumptogroups">
         </item>
         <item android:id="@+id/logout_drawer_menu"
             android:title="Log Out"

@@ -97,7 +97,7 @@ public class HomeFragment extends Fragment {
         checkIns = new ArrayList<>();
         mMapView = (MapView) view.findViewById(R.id.mapview);
         mMapView.setTileSource(TileSourceFactory.MAPNIK);
-        mMapView.setBuiltInZoomControls(true);
+        //mMapView.setBuiltInZoomControls(true);
         mMapView.setMultiTouchControls(true);
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.checkinbtnicon));

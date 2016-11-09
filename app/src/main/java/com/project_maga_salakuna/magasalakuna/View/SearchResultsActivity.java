@@ -125,7 +125,7 @@ public class SearchResultsActivity extends AppCompatActivity {
                     JSONArray friends = json.getJSONArray("friends");
                     Friends friend = null;
                     friendList = new ArrayList<>();
-                    for (int i = 0; i< users.length();i++){
+                    for (int i = 0; i< friends.length();i++){
                         String friend1 = ((JSONObject)(friends.get(i))).getString("friend1");
                         String friend2 = ((JSONObject)(friends.get(i))).getString("friend2");
                         int accepted = Integer.parseInt(((JSONObject)(friends.get(i))).getString("accepted"));

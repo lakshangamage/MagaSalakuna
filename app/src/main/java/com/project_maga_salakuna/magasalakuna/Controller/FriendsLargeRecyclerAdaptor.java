@@ -69,35 +69,42 @@ public class FriendsLargeRecyclerAdaptor extends RecyclerView.Adapter<FriendsLar
             holder.photoview.setBackgroundResource(0);
             holder.photoview.setImageBitmap(decodedByte);
         }
-        for (Friends friend :
-                friendList) {
-            if (friend.getFriend2().equals(id)){
-                if (friend.getAccepted() == 0){
-                    holder.addBtn.setTextColor(Color.parseColor("#a84d4d"));
-                    holder.addBtn.setText("Request Sent");
-                    //button.setBackground(null);
-                    holder.addBtn.setBackgroundColor(0xffffff);
-                    holder.addBtn.setEnabled(false);
-                }else{
-                    holder.addBtn.setTextColor(Color.parseColor("#249e00"));
-                    holder.addBtn.setText(Html.fromHtml("&#x2713") + " Friends");
-                    //button.setBackground(null);
-                    holder.addBtn.setBackgroundColor(0xffffff);
-                    holder.addBtn.setEnabled(false);
-                }
-            }else if(friend.getFriend1().equals(id)){
-                if (friend.getAccepted() == 0){
-                    holder.addBtn.setText("Confirm");
-                }else{
-                    holder.addBtn.setTextColor(Color.parseColor("#249e00"));
-                    holder.addBtn.setText(Html.fromHtml("&#x2713") + " Friends");
-                    //button.setBackground(null);
-                    holder.addBtn.setBackgroundColor(0xffffff);
-                    holder.addBtn.setEnabled(false);
+        if (friendList != null) {
+            for (Friends friend :
+                    friendList) {
+                if (friend.getFriend2().equals(id)) {
+                    if (friend.getAccepted() == 0) {
+                        holder.addBtn.setTextColor(Color.parseColor("#a84d4d"));
+                        holder.addBtn.setText("Request Sent");
+                        //button.setBackground(null);
+                        holder.addBtn.setBackgroundColor(0xffffff);
+                        holder.addBtn.setEnabled(false);
+                    } else {
+                        holder.addBtn.setTextColor(Color.parseColor("#249e00"));
+                        holder.addBtn.setText(Html.fromHtml("&#x2713") + " Friends");
+                        //button.setBackground(null);
+                        holder.addBtn.setBackgroundColor(0xffffff);
+                        holder.addBtn.setEnabled(false);
+                    }
+                } else if (friend.getFriend1().equals(id)) {
+                    if (friend.getAccepted() == 0) {
+                        holder.addBtn.setText("Confirm");
+                    } else {
+                        holder.addBtn.setTextColor(Color.parseColor("#249e00"));
+                        holder.addBtn.setText(Html.fromHtml("&#x2713") + " Friends");
+                        //button.setBackground(null);
+                        holder.addBtn.setBackgroundColor(0xffffff);
+                        holder.addBtn.setEnabled(false);
+                    }
                 }
             }
+        }else{
+            holder.addBtn.setTextColor(Color.parseColor("#249e00"));
+            holder.addBtn.setText(Html.fromHtml("&#x2713") + " Friends");
+            //button.setBackground(null);
+            holder.addBtn.setBackgroundColor(0xffffff);
+            holder.addBtn.setEnabled(false);
         }
-
     }
     @Override
     public int getItemCount() {

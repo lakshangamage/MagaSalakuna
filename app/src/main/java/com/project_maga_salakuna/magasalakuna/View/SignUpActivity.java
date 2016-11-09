@@ -3,6 +3,7 @@ package com.project_maga_salakuna.magasalakuna.View;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -19,8 +20,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Base64;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -37,12 +40,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class SignUpActivity extends Activity {
 
-    EditText firstName, lastName, phone, email, password;
+    EditText firstName, lastName, phone, email, password, birthday;
     Button signup;
     ImageView imageButton;
     Context context;
@@ -52,7 +58,7 @@ public class SignUpActivity extends Activity {
     JSONParser jsonParser = new JSONParser();
 
     private static final String LOGIN_URL = "http://176.32.230.51/pathmila.com/maga_salakuna/register.php";
-
+    final Calendar myCalendar = Calendar.getInstance();
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_MESSAGE = "message";
     /**
@@ -73,6 +79,34 @@ public class SignUpActivity extends Activity {
         phone = (EditText) findViewById(R.id.phonetxt);
         signup = (Button) findViewById(R.id.signupbtn);
         imageButton = (ImageView) findViewById(R.id.addprofilepicbtn);
+        birthday = (EditText) findViewById(R.id.birthdaytxt);
+
+
+
+        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel();
+            }
+
+        };
+
+        birthday.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                new DatePickerDialog(context, date, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
 
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,14 +122,44 @@ public class SignUpActivity extends Activity {
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AttemptLogin().execute();
+                if(isValidEmail(email.getText().toString())){
+                    if(isValidPhone(phone.getText().toString())){
+                        new AttemptLogin().execute();
+                    }else{
+                        Toast.makeText(SignUpActivity.this, "Invalid Mobile number!", Toast.LENGTH_LONG).show();
+                    }
+
+                }else{
+                    Toast.makeText(SignUpActivity.this, "Invalid Email!", Toast.LENGTH_LONG).show();
+                }
+
             }
         });
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
+    public final static boolean isValidEmail(CharSequence target) {
+        if (target == null) {
+            return false;
+        } else {
+            return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
+        }
+    }
+    public final static boolean isValidPhone(CharSequence target) {
+        if (target == null) {
+            return false;
+        } else {
+            return Patterns.PHONE.matcher(target).matches();
+        }
+    }
+    private void updateLabel() {
 
+        String myFormat = "MM/dd/yy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat);
+
+        birthday.setText(sdf.format(myCalendar.getTime()));
+    }
     public String getFirstName() {
         return firstName.getText().toString();
     }
