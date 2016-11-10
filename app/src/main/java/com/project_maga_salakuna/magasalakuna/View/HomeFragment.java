@@ -207,7 +207,7 @@ public class HomeFragment extends Fragment {
             }, 10);
             return;
         }
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10000, 0, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, locationListener);
         progressDialog.setMessage("Waiting for Location...");
         showDialog();
         Timer timer = new Timer();
@@ -222,7 +222,7 @@ public class HomeFragment extends Fragment {
                                         PackageManager.PERMISSION_GRANTED) {
                             return;
                         }
-                        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListener);
+                        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, locationListener);
                     }
                 }
             }, 5000);
@@ -465,7 +465,7 @@ public class HomeFragment extends Fragment {
                             Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, locationListener);
             Timer timer = new Timer();
             if (!locationFound) {
                 timer.schedule(new TimerTask() {
@@ -478,7 +478,7 @@ public class HomeFragment extends Fragment {
                                             PackageManager.PERMISSION_GRANTED) {
                                 return;
                             }
-                            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListener);
+                            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, locationListener);
                         }
                     }
                 }, 5000);
