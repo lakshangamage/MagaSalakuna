@@ -34,13 +34,16 @@ public class FriendsSmallRecyclerAdaptor extends RecyclerView.Adapter<FriendsSma
     }
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, int position) {
-        holder.nameTxt.setText(friendList.get(position).getFirstName() + " "+ friendList.get(position).getLastName() );
+        User user = friendList.get(position);
+        holder.nameTxt.setText(user.getFirstName() + " "+ user.getLastName() );
         if(friendList.get(position).getPicture() !=null){
-            byte[] decodedString = Base64.decode(friendList.get(position).getPicture(), Base64.DEFAULT);
+            byte[] decodedString = Base64.decode(user.getPicture(), Base64.DEFAULT);
             Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
             holder.photoview.setBackgroundResource(0);
             holder.photoview.setImageBitmap(decodedByte);
         }
+        holder.lastseentxt.setText(timeConversion(user.getTime()));
+
     }
     @Override
     public int getItemCount() {
@@ -53,11 +56,31 @@ public class FriendsSmallRecyclerAdaptor extends RecyclerView.Adapter<FriendsSma
     public static class RecyclerViewHolder extends RecyclerView.ViewHolder{
         ImageView photoview = null;
         TextView nameTxt = null;
+        TextView lastseentxt = null;
         public RecyclerViewHolder(View itemView) {
             super(itemView);
             photoview = (ImageView) itemView.findViewById(R.id.photoView);
             nameTxt = (TextView) itemView.findViewById(R.id.fullnameTxt);
+            lastseentxt = (TextView) itemView.findViewById(R.id.lstseentxt);
         }
     }
+    public String timeConversion(long time){
+        long currentTime = System.currentTimeMillis();
+        long diff = currentTime - time;
+        String output="";
+        if (diff < 1000*60*5){
+            output += String.valueOf("Now");
+        }else if (diff < 1000*60*60){
+            output += String.valueOf(diff/(1000*60)) + "m";
+        }else if (diff < 1000*60*60*24){
+            output += String.valueOf(diff/(1000*60*60)) + "h";
+        }else if (diff < 1000*60*60*24*31){
+            output += String.valueOf(diff/(1000*60*60*24)) + "d";
+        }else{
+            output += String.valueOf("long ago");
+        }
+        return output;
+    }
+
 }
 

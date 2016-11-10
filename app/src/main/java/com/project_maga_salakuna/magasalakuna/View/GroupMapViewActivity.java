@@ -160,7 +160,7 @@ public class GroupMapViewActivity extends AppCompatActivity {
             Marker endMarker = new Marker(mMapView);
             endMarker.setPosition(userLocation);
             endMarker.setTitle("You Are Here");
-            endMarker.setIcon(getResources().getDrawable(R.drawable.mappointer));
+            endMarker.setIcon(getResources().getDrawable(R.drawable.mypinpointer));
             endMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
             poiMarkers.add(endMarker);
             mMapView.getOverlays().add(poiMarkers);

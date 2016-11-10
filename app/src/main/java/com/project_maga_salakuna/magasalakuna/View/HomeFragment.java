@@ -8,7 +8,12 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -21,14 +26,18 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.project_maga_salakuna.magasalakuna.Controller.FriendListRecyclerAdaptor;
 import com.project_maga_salakuna.magasalakuna.Controller.JSONParser;
 import com.project_maga_salakuna.magasalakuna.Model.CheckIn;
 import com.project_maga_salakuna.magasalakuna.Model.CircleView;
@@ -76,14 +85,16 @@ public class HomeFragment extends Fragment {
     FloatingActionButton fab;
     FloatingActionButton refreshfab;
     public ArrayList<CheckIn> checkIns;
+    public ArrayList<User> friendList= new ArrayList<>();
     JSONParser jsonParser = new JSONParser();
     private ProgressDialog pDialog;
-    private static final String SEARCH_URL = "http://176.32.230.51/pathmila.com/maga_salakuna/getcheckins.php";
+    private static final String SEARCH_URL = "http://176.32.230.51/pathmila.com/maga_salakuna/friendlist.php";
     private static final String updateURL = "http://176.32.230.51/pathmila.com/maga_salakuna/lastseen.php";
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_MESSAGE = "message";
     FolderOverlay poiMarkers;
     boolean locationFound = false;
+    public ArrayList<User> currentUsersInRange = new ArrayList<>();
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -92,6 +103,7 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         activity = getActivity();
+        poiMarkers = new FolderOverlay(activity);
         progressDialog = new ProgressDialog(activity);
         progressDialog.setCancelable(false);
         checkIns = new ArrayList<>();
@@ -115,14 +127,12 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // Click action
-                MainActivity mainActivity = (MainActivity) getActivity();
-                mainActivity.refresh();
-                refreshMapRange();
+                new SearchFriends().execute();
             }
         });
         mMapController = mMapView.getController();
         mMapController.setZoom(18);
-        new GetCheckins().execute();
+        new SearchFriends().execute();
         circleView = (CircleView) view.findViewById(R.id.circle_drawer_view);
         seekBar = (SeekBar) view.findViewById(R.id.seekbar);
         distanceText = (TextView) view.findViewById(R.id.distanceText);
@@ -168,7 +178,7 @@ public class HomeFragment extends Fragment {
 //                Toast toast = Toast.makeText(getContext(), "Location Changed", Toast.LENGTH_SHORT);
 //                toast.show();
                 new UpdateLoationRemote().execute();
-                updateMap(checkIns);
+                updateMap();
             }
 
             @Override
@@ -219,25 +229,34 @@ public class HomeFragment extends Fragment {
         }
 
     }
-    private void updateMap(ArrayList<CheckIn> checkIns) {
+    private void updateMap() {
         if (!locationSet) {
             userLocation = new GeoPoint(currentxCoordinates, currentyCoordinates);
             /*myItemizedOverlay.addItem(userLocation, "You", "You");
             myPath.addPoint(userLocation);
             myPath.addPoint(userLocation);*/
             //mMapView.getOverlays().add(myPath);
+            mMapView.getOverlays().remove(poiMarkers);
             poiMarkers = new FolderOverlay(activity);
 
-            for (CheckIn checkIn : checkIns) {
+            for (User user : currentUsersInRange) {
                 Marker poiMarker = new Marker(mMapView);
-                poiMarker.setTitle(checkIn.getUser().getFirstName() + " " + checkIn.getUser().getLastName());
-                poiMarker.setSnippet(checkIn.getStatus() + " @ " + checkIn.getAt());
-                poiMarker.setPosition(new GeoPoint(checkIn.getLattitude(), checkIn.getLongitude()));
+                poiMarker.setTitle(user.getFirstName() + " " + user.getLastName());
+                if(user.getPicture() !=null){
+                    byte[] decodedString = Base64.decode(user.getPicture(), Base64.DEFAULT);
+                    Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                    Drawable d = new BitmapDrawable(getResources(), decodedByte);
+                    poiMarker.setImage(d);
+                }
+                poiMarker.setIcon(getResources().getDrawable(R.drawable.mappointer));
+                poiMarker.setSnippet(timeConversion(user.getTime()));
+                poiMarker.setPosition(new GeoPoint(user.getLslattitude(), user.getLslongitude()));
                 poiMarkers.add(poiMarker);
             }
             Marker endMarker = new Marker(mMapView);
             endMarker.setPosition(userLocation);
             endMarker.setTitle("You Are Here");
+            endMarker.setIcon(getResources().getDrawable(R.drawable.mypinpointer));
             endMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
             poiMarkers.add(endMarker);
             mMapView.getOverlays().add(poiMarkers);
@@ -340,7 +359,7 @@ public class HomeFragment extends Fragment {
                 // Inflate the layout for this fragment
             } else {
                 locationSet = false;
-                updateMap(checkIns);
+                updateMap();
             }
         }
     }
@@ -433,7 +452,7 @@ public class HomeFragment extends Fragment {
                 // Inflate the layout for this fragment
             } else {
                 locationSet = false;
-                updateMap(checkIns);
+                updateMap();
             }
         }
     }
@@ -473,23 +492,34 @@ public class HomeFragment extends Fragment {
         userLocation = new GeoPoint(currentxCoordinates, currentyCoordinates);
         mMapView.getOverlays().remove(poiMarkers);
         poiMarkers = new FolderOverlay(activity);
-        for(CheckIn checkIn: checkIns){
-            if (distFrom(circleCentrePoint.getLatitude(),circleCentrePoint.getLongitude(),checkIn.getLattitude(),checkIn.getLongitude()) <= maxDistance){
+        currentUsersInRange = new ArrayList<>();
+        for (User user : friendList) {
+            double userdis = distFrom(circleCentrePoint.getLatitude(),circleCentrePoint.getLongitude(),user.getLslattitude(),user.getLslongitude());
+            if (userdis <= maxDistance) {
+                currentUsersInRange.add(user);
                 Marker poiMarker = new Marker(mMapView);
-                poiMarker.setTitle(checkIn.getUser().getFirstName() + " " + checkIn.getUser().getLastName());
-                poiMarker.setSnippet(checkIn.getStatus() + " @ " + checkIn.getAt());
-                poiMarker.setPosition(new GeoPoint(checkIn.getLattitude(), checkIn.getLongitude()));
+                poiMarker.setTitle(user.getFirstName() + " " + user.getLastName());
+                if (user.getPicture() != null) {
+                    byte[] decodedString = Base64.decode(user.getPicture(), Base64.DEFAULT);
+                    Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                    Drawable d = new BitmapDrawable(getResources(), decodedByte);
+                    poiMarker.setImage(d);
+                }
+                poiMarker.setIcon(getResources().getDrawable(R.drawable.mappointer));
+                poiMarker.setSnippet(timeConversion(user.getTime()));
+                poiMarker.setPosition(new GeoPoint(user.getLslattitude(), user.getLslongitude()));
                 poiMarkers.add(poiMarker);
             }
         }
-
         Marker endMarker = new Marker(mMapView);
         endMarker.setPosition(userLocation);
         endMarker.setTitle("You Are Here");
+        endMarker.setTextLabelBackgroundColor(Color.TRANSPARENT);
+        endMarker.setIcon(getResources().getDrawable(R.drawable.mypinpointer));
         endMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
         poiMarkers.add(endMarker);
         mMapView.getOverlays().add(poiMarkers);
-        //mMapView.invalidate();
+        mMapView.invalidate();
     }
     private GeoPoint geoPointFromScreenCoords(int x, int y, MapView vw){
         if (x < 0 || y < 0 || x > vw.getWidth() || y > vw.getHeight()){
@@ -581,4 +611,113 @@ public class HomeFragment extends Fragment {
 
         }
     }
+    class SearchFriends extends AsyncTask<String, String, String> {
+
+        boolean failure = false;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(activity);
+            pDialog.setMessage("Refreshing...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(true);
+            pDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... args) {
+            // TODO Auto-generated method stub
+            // Check for success tag
+            int success;
+            try {
+                // Building Parameters
+                List<NameValuePair> params = new ArrayList<NameValuePair>();
+                params.add(new BasicNameValuePair("id", MainActivity.id));
+
+                Log.d("request!", "starting");
+                // getting product details by making HTTP request
+                JSONObject json = jsonParser.makeHttpRequest(
+                        SEARCH_URL, "POST", params);
+
+                // check your log for json response
+                Log.d("Login attempt", json.toString());
+
+                // json success tag
+                success = json.getInt(TAG_SUCCESS);
+
+                friendList = new ArrayList<>();
+                if (success == 1) {
+                    JSONArray users = json.getJSONArray("users");
+                    User user = null;
+                    for (int i = 0; i< users.length();i++){
+                        String id = ((JSONObject)(users.get(i))).getString("id");
+                        String firstname = ((JSONObject)(users.get(i))).getString("first_name");
+                        String lastname = ((JSONObject)(users.get(i))).getString("last_name");
+                        String email = ((JSONObject)(users.get(i))).getString("email");
+                        String phone = ((JSONObject)(users.get(i))).getString("phone");
+                        String picture = ((JSONObject)(users.get(i))).getString("picture");
+                        user = new User(id, firstname,lastname,email,phone,picture);
+                        double longitude = ((JSONObject) (users.get(i))).getDouble("longitude");
+                        double lattitude = ((JSONObject) (users.get(i))).getDouble("latitude");
+                        long time = ((JSONObject) (users.get(i))).getLong("time");
+                        user = new User(id, firstname, lastname, email, phone, picture, longitude, lattitude, time);
+                        friendList.add(user);
+                    }
+                    return String.valueOf(json.getInt(TAG_SUCCESS));
+                }else{
+                    Log.d("Login Failure!", json.getString(TAG_MESSAGE));
+                    //Toast.makeText(Login.this, "Invalid login details", Toast.LENGTH_LONG).show();
+                    return json.getString(TAG_MESSAGE);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        protected void onPostExecute(String file_url) {
+            if (file_url.equals("0")){
+                Toast.makeText(getContext(), "No Friends", Toast.LENGTH_LONG).show();
+            }//pDialog.dismiss();
+//            if (file_url != null) {
+//                Toast.makeText(activity, file_url, Toast.LENGTH_LONG).show();
+//            }
+
+//            if (!mapUpdated) {
+//
+//                getLocation();
+//                mapUpdated = true;
+//                // Inflate the layout for this fragment
+//            } else {
+//                locationSet = false;
+//                updateMap();
+//            }
+            if (!locationFound){
+                getLocation();
+            }
+            refreshMapRange();
+            MainActivity mainActivity = (MainActivity) getActivity();
+            mainActivity.refresh(currentUsersInRange);
+            pDialog.dismiss();
+        }
+    }
+    public String timeConversion(long time){
+        long currentTime = System.currentTimeMillis();
+        long diff = currentTime - time;
+        String output="Last Seen ";
+        if (diff < 1000*60*5){
+            output += String.valueOf("Now");
+        }else if (diff < 1000*60*60){
+            output += String.valueOf(diff/(1000*60)) + "m ago";
+        }else if (diff < 1000*60*60*24){
+            output += String.valueOf(diff/(1000*60*60)) + "h ago";
+        }else if (diff < 1000*60*60*24*31){
+            output += String.valueOf(diff/(1000*60*60*24)) + "days ago";
+        }else{
+            output += String.valueOf("more than a month ago");
+        }
+        return output;
+    }
+
 }

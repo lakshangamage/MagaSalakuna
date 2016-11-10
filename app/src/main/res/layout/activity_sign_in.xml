@@ -84,7 +84,7 @@
                     android:layout_margin="5dp"
                     android:textColor="#000000"
                     android:textColorHint="#ffffff"
-                    android:hint="Choose a Password"
+                    android:hint="Password"
                     android:gravity="left|center"
                     android:background="#56ffffff"
                     android:padding="5dp"
