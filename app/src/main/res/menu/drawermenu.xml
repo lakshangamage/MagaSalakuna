@@ -7,6 +7,11 @@
             android:onClick="jumptohome">
             >
         </item>
+        <item android:id="@+id/showme_drawer_menu"
+            android:title="Show Me Where"
+            android:icon="@drawable/checkinbtnicon"
+            android:onClick="jumptoshowme">
+        </item>
         <item android:id="@+id/friends_drawer_menu"
             android:title="Friends"
             android:icon="@drawable/friendsicon"
@@ -21,6 +26,7 @@
             android:icon="@drawable/groupicon"
             android:onClick="jumptogroups">
         </item>
+
         <item android:id="@+id/logout_drawer_menu"
             android:title="Log Out"
             android:icon="@drawable/logouticon"

@@ -261,6 +261,10 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setCurrentItem(1,true);
         drawerLayout.closeDrawer(Gravity.LEFT);
     }
+    public void jumptoshowme(MenuItem item){
+        Intent intent = new Intent(this, showmewhere.class);
+        startActivity(intent);
+    }
     public void jumptogroups(MenuItem item){
         viewPager.setCurrentItem(2,true);
         drawerLayout.closeDrawer(Gravity.LEFT);
